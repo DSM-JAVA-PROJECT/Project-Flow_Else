@@ -9,6 +9,11 @@ on:
 name: Gradle Package
 env:
   PROJECT_NAME: JavaProject
+  EMAIL_ID:${{ secrets.EMAIL_ID }}
+  EMAIL_PWD:${{ secrets.EMAIL_PWD }}
+  MONGO_DB:${{ secrets.MONGO_DB }}
+  SMTP_CLASS:${{ secrets.SMTP_CLASS }}
+  SECRET_KEY:${{ secrets.SECRET_KEY }}
 
 jobs:
   deploy:
