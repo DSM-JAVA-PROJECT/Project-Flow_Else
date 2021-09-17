@@ -35,6 +35,12 @@ jobs:
         with:
           redis-version: 6
 
+      - name: Env Test1
+        run: env | grep EMAIL_ID
+
+      - name: Env Test2
+        run: env | grep MONGO_DB
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
         shell: bash
