@@ -3,6 +3,7 @@ package com.asdf148.javaproject.domain.project.entity;
 import com.asdf148.javaproject.domain.chatRoom.entity.ChatRoom;
 import com.asdf148.javaproject.domain.auth.entity.User;
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -20,7 +21,7 @@ import java.util.*;
 public class Project {
 
     @MongoId
-    private String id;
+    private ObjectId id;
 
     @NotBlank
     private String projectName;

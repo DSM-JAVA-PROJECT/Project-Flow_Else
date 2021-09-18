@@ -2,6 +2,7 @@ package com.asdf148.javaproject.domain.auth.entity;
 
 import com.asdf148.javaproject.domain.project.entity.Project;
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -18,7 +19,7 @@ import java.util.List;
 public class User {
 
     @MongoId
-    private String id;
+    private ObjectId id;
 
     @NotBlank
     private String email;

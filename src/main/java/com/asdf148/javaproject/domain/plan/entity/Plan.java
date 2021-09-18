@@ -1,6 +1,7 @@
 package com.asdf148.javaproject.domain.plan.entity;
 
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -16,7 +17,7 @@ import java.util.List;
 public class Plan {
 
     @MongoId
-    private String id;
+    private ObjectId id;
 
     @NotBlank
     private String name;

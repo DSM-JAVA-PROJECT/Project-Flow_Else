@@ -3,6 +3,7 @@ package com.asdf148.javaproject.domain.chatRoom.entity;
 import com.asdf148.javaproject.domain.plan.entity.Plan;
 import com.asdf148.javaproject.domain.auth.entity.User;
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -16,7 +17,7 @@ import java.util.List;
 public class ChatRoom {
 
     @MongoId
-    private String id;
+    private ObjectId id;
 
     @NotBlank
     private String name;
