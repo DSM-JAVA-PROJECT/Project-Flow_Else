@@ -5,6 +5,7 @@ import com.asdf148.javaproject.global.config.user.CustomUserDetailsService;
 import com.asdf148.javaproject.global.dto.TokenContent;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -54,7 +55,7 @@ public class JwtToken {
     public TokenContent decodeToken(String token) {
         Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
 
-        TokenContent tokenContent = new TokenContent(String.valueOf(claims.getBody().get("id")), String.valueOf(claims.getBody().get("email")));
+        TokenContent tokenContent = new TokenContent(new ObjectId(String.valueOf(claims.getBody().get("id"))), String.valueOf(claims.getBody().get("email")));
 
         return tokenContent;
     }

@@ -13,9 +13,9 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-@Document(collation = "user")
+@Document(collection = "user")
 public class User {
 
     @MongoId
@@ -35,6 +35,6 @@ public class User {
     @NotBlank
     private String phoneNumber;
 
-    @DBRef
+    @DBRef(lazy = true)
     private List<Project> projects;
 }

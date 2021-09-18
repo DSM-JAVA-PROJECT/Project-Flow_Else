@@ -9,6 +9,7 @@ import com.asdf148.javaproject.domain.project.entity.ProjectRepository;
 import com.asdf148.javaproject.global.config.JwtToken;
 import com.asdf148.javaproject.global.dto.TokenContent;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,7 +21,7 @@ public class ChatRoomService {
     private final UserRepository userRepository;
     private final ChatRoomRepository chatRoomRepository;
 
-    public void InitialChatRoom(String token, String projectId, CreateChatRoom createChatRoom) {
+    public void InitialChatRoom(String token, ObjectId projectId, CreateChatRoom createChatRoom) {
         TokenContent tokenContext = jwtToken.decodeToken(token);
 
         Project project = projectRepository.findById(projectId).orElseThrow();
@@ -32,18 +33,7 @@ public class ChatRoomService {
         chatRoom.getUserIds().add(userRepository.findByEmail(tokenContext.getEmail()).orElseThrow());
         project.getChatRooms().add(chatRoom);
 
-        Project updateProject = Project.builder()
-                .id(project.getId())
-                .projectName(project.getProjectName())
-                .explanation(project.getExplanation())
-                .startDate(project.getStartDate())
-                .endDate(project.getEndDate())
-                .logoImage(project.getLogoImage())
-                .chatRooms(project.getChatRooms())
-                .projectUsers(project.getProjectUsers())
-                .build();
-
         chatRoomRepository.save(chatRoom);
-        projectRepository.save(updateProject);
+        projectRepository.save(project);
     }
 }

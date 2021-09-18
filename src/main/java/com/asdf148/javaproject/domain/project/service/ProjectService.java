@@ -9,6 +9,7 @@ import com.asdf148.javaproject.domain.project.entity.ProjectUser;
 import com.asdf148.javaproject.global.config.JwtToken;
 import com.asdf148.javaproject.global.dto.TokenContent;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -39,7 +40,7 @@ public class ProjectService {
         }
     }
 
-    public void initialPersonnel(String token, String projectId, String field){
+    public void initialPersonnel(String token, ObjectId projectId, String field){
         TokenContent tokenContext = jwtToken.decodeToken(token);
 
         Project project = projectRepository.findById(projectId).orElseThrow();
@@ -51,23 +52,11 @@ public class ProjectService {
 
         project.getProjectUsers().add(projectUser);
 
-        Project updateProject = Project.builder()
-                .id(project.getId())
-                .projectName(project.getProjectName())
-                .explanation(project.getExplanation())
-                .startDate(project.getStartDate())
-                .endDate(project.getEndDate())
-                .logoImage(project.getLogoImage())
-                .chatRooms(project.getChatRooms())
-                .projectUsers(project.getProjectUsers())
-                .pm(project.getPm())
-                .build();
-
-        projectRepository.save(updateProject);
+        projectRepository.save(project);
 
     }
 
-    public void addPersonnel(String email, String projectId){
+    public void addPersonnel(String email, ObjectId projectId){
 
         Project project = projectRepository.findById(projectId).orElseThrow();
 
@@ -75,26 +64,13 @@ public class ProjectService {
                 .user(userRepository.findByEmail(email).orElseThrow())
                 .build();
 
-        //add가 안 되는듯
         project.getProjectUsers().add(projectUser);
 
-        Project updateProject = Project.builder()
-                .id(project.getId())
-                .projectName(project.getProjectName())
-                .explanation(project.getExplanation())
-                .startDate(project.getStartDate())
-                .endDate(project.getEndDate())
-                .logoImage(project.getLogoImage())
-                .chatRooms(project.getChatRooms())
-                .projectUsers(project.getProjectUsers())
-                .pm(project.getPm())
-                .build();
-
-        projectRepository.save(updateProject);
+        projectRepository.save(project);
 
     }
 
-    public void modifyProject(String token, String id, ModifyProject modifyProject) throws Exception{
+    public void modifyProject(String token, ObjectId id, ModifyProject modifyProject) throws Exception{
         TokenContent tokenContext = jwtToken.decodeToken(token);
         //프로젝트인원에서 권한확인
         if(!projectRepository.findById(id).orElseThrow().getPm().equals(userRepository.findById(tokenContext.getId()))){
@@ -103,21 +79,10 @@ public class ProjectService {
 
         Project project = projectRepository.findById(id).orElseThrow();
 
-        Project updateProject = Project.builder()
-                .id(project.getId())
-                .projectName(modifyProject.getProjectName())
-                .explanation(modifyProject.getExplanation())
-                .startDate(modifyProject.getStartDate())
-                .endDate(modifyProject.getEndDate())
-                .logoImage(modifyProject.getLogoImage())
-                .chatRooms(project.getChatRooms())
-                .projectUsers(project.getProjectUsers())
-                .build();
-
-        projectRepository.save(updateProject);
+        projectRepository.save(project);
     }
 
-    public void deleteProject(String token, String id) throws Exception{
+    public void deleteProject(String token, ObjectId id) throws Exception{
         TokenContent tokenContext = jwtToken.decodeToken(token);
         //프로젝트인원에서 권한확인
         if(!projectRepository.findById(id).orElseThrow().getPm().equals(userRepository.findById(tokenContext.getId()))){

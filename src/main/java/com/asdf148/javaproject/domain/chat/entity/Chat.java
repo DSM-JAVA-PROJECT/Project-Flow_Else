@@ -15,9 +15,9 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-@Document(collation = "chat")
+@Document(collection = "chat")
 public class Chat {
 
     @MongoId
@@ -37,5 +37,4 @@ public class Chat {
 
     @CreatedDate
     private LocalDateTime createdAt;
-
 }
