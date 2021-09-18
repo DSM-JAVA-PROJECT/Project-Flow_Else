@@ -47,10 +47,10 @@ public class AuthService {
     public ReturnToken signIn(SignInUser s_user) throws Exception {
         User user = userRepository.findByEmail(s_user.getEmail()).orElseThrow();
         if (user == null) {
-            new Exception("이메일이 잘못되었습니다.");
+            throw new Exception("이메일이 잘못되었습니다.");
         }
         if (passwordEncoder.matches(s_user.getPassword(), user.getPassword())) {
-            new Exception("비밀번호가 잘못되었습니다.");
+            throw new Exception("비밀번호가 잘못되었습니다.");
         }
         return ReturnToken.builder()
                 .accessToken(jwtToken.createToken(user))

@@ -27,11 +27,6 @@ public class EmailService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     public static final String ePw = createKey();
 
-    @Value("${AdminMail.id}")
-    private String id;
-    @Value("${AdminMail.password}")
-    private String password;
-
     private MimeMessage createMessage(String to)throws Exception{
         VerifyCode emailCode = new VerifyCode(to, ePw);
         verifyCodeRedisRepository.save(emailCode);
@@ -66,10 +61,6 @@ public class EmailService {
     }
 
     public void sendSimpleMessage(String to)throws Exception {
-
-        System.out.println(id);
-        System.out.println(password);
-
         MimeMessage message = createMessage(to);
         try{//예외처리
             emailSender.send(message);
