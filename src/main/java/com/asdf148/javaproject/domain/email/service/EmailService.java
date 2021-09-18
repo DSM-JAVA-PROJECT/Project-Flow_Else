@@ -7,6 +7,7 @@ import com.asdf148.javaproject.global.redisEntity.user.VerifyUserRedisRepository
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,11 @@ public class EmailService {
     private final JavaMailSender emailSender;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     public static final String ePw = createKey();
+
+    @Value("${AdminMail.id}")
+    private String id;
+    @Value("${AdminMail.password}")
+    private String password;
 
     private MimeMessage createMessage(String to)throws Exception{
         VerifyCode emailCode = new VerifyCode(to, ePw);
@@ -60,6 +66,10 @@ public class EmailService {
     }
 
     public void sendSimpleMessage(String to)throws Exception {
+
+        System.out.println(id);
+        System.out.println(password);
+
         MimeMessage message = createMessage(to);
         try{//예외처리
             emailSender.send(message);
