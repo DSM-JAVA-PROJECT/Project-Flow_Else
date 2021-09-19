@@ -48,7 +48,6 @@ public class AuthService {
         System.out.println("before findByEmail");
         User user = userRepository.findByEmail(s_user.getEmail()).orElseThrow();
         System.out.println("after findByEmail");
-        System.out.println(user);
         if (user == null) {
             throw new Exception("이메일이 잘못되었습니다.");
         }
