@@ -52,7 +52,7 @@ public class AuthService {
         if (user == null) {
             throw new Exception("이메일이 잘못되었습니다.");
         }
-        if (passwordEncoder.matches(s_user.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(s_user.getPassword(), user.getPassword())) {
             throw new Exception("비밀번호가 잘못되었습니다.");
         }
         return ReturnToken.builder()
