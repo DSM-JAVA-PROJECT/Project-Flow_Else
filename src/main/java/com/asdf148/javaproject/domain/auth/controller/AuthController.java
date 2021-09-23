@@ -25,7 +25,7 @@ public class AuthController {
             return new ResponseEntity<>(authService.signUp(s_user), HttpStatus.CREATED);
         }
         catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_GATEWAY);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
