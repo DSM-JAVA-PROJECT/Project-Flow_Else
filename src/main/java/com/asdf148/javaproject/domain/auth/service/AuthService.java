@@ -41,7 +41,7 @@ public class AuthService {
 
         userRepository.save(user);
 
-        return "success";
+        return "Success";
     }
 
     public ReturnToken signIn(SignInUser s_user) throws Exception {

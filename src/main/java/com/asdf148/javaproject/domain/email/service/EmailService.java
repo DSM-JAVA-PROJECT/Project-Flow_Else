@@ -79,7 +79,7 @@ public class EmailService {
 
         VerifyUser verifyUser = new VerifyUser(verifyCode.getEmail());
         verifyUserRedisRepository.save(verifyUser);
-        return "success";
+        return "Success";
     }
 
     //초대 이메일 생성
