@@ -26,4 +26,5 @@ public class CreateProject {
 
     private ArrayList<String> emails;
 
+    private String field;
 }

@@ -20,7 +20,7 @@ public class ProjectService {
 
     private final JwtToken jwtToken;
 
-    public void createProject(String token, CreateProject createProject, String field){
+    public void createProject(String token, CreateProject createProject){
         TokenContent tokenContext = jwtToken.decodeToken(token);
 
         Project project = Project.builder()
@@ -34,7 +34,7 @@ public class ProjectService {
 
         Project savedProject = projectRepository.save(project);
 
-        initialPersonnel(token, savedProject.getId(), field);
+        initialPersonnel(token, savedProject.getId(), createProject.getField());
         for(String email: createProject.getEmails()) {
             addPersonnel(email, savedProject.getId());
         }
