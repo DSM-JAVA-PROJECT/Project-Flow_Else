@@ -1,6 +1,7 @@
 package com.asdf148.javaproject.domain.project.service;
 
 import com.asdf148.javaproject.domain.auth.entity.UserRepository;
+import com.asdf148.javaproject.domain.email.service.EmailService;
 import com.asdf148.javaproject.domain.project.dto.CreateProject;
 import com.asdf148.javaproject.domain.project.dto.ModifyProject;
 import com.asdf148.javaproject.domain.project.entity.Project;
@@ -19,8 +20,9 @@ public class ProjectService {
     private final UserRepository userRepository;
 
     private final JwtToken jwtToken;
+    private final EmailService emailService;
 
-    public void createProject(String token, CreateProject createProject){
+    public String createProject(String token, CreateProject createProject){
         TokenContent tokenContext = jwtToken.decodeToken(token);
 
         Project project = Project.builder()
@@ -36,8 +38,15 @@ public class ProjectService {
 
         initialPersonnel(token, savedProject.getId(), createProject.getField());
         for(String email: createProject.getEmails()) {
-            addPersonnel(email, savedProject.getId());
+            try{
+                emailService.sendInviteLink(email);
+            }
+            catch (Exception e){
+                return e.getMessage();
+            }
         }
+
+        return "sucess";
     }
 
     public void initialPersonnel(String token, ObjectId projectId, String field){

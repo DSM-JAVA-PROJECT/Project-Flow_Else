@@ -3,11 +3,10 @@ package com.asdf148.javaproject.domain.project.controller;
 import com.asdf148.javaproject.domain.project.dto.CreateProject;
 import com.asdf148.javaproject.domain.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -23,6 +22,16 @@ public class ProjectController {
             return new ResponseEntity<>("sucess", HttpStatus.CREATED);
         }
         catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/project")
+    public ResponseEntity<String> addPerson(@RequestParam("email") String email, @RequestParam("id") ObjectId projectId){
+        try{
+            projectService.addPersonnel(email, projectId);
+            return new ResponseEntity<>("Success", HttpStatus.OK);
+        }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

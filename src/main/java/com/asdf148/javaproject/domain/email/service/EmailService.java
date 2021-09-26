@@ -81,4 +81,40 @@ public class EmailService {
         verifyUserRedisRepository.save(verifyUser);
         return "success";
     }
+
+    //초대 이메일 생성
+    private MimeMessage createInviteMessage(String to)throws Exception{
+        //randomuuid로 유일키 생성
+        //db에 유저 이메일, 프로젝트 아이디, 유일키 저장?
+        //그냥 유저 이메일, 프로젝트 아이디 query로 해서 보낼 수도 있는데
+
+        String link = "";
+
+        logger.info("Send to : "+ to);
+        logger.info("Invite Link : " + link);
+        MimeMessage  message = emailSender.createMimeMessage();
+
+        message.addRecipients(Message.RecipientType.TO, to); //보내는 대상
+        message.setSubject("프로젝트 초대 링크"); //제목
+
+        String msg="";
+        msg += "<h1 style=\"font-size: 30px; padding-right: 30px; padding-left: 30px;\">프로젝트 초대 링크</h1>";
+        msg += "<div style=\"padding-right: 30px; padding-left: 30px; margin: 32px 0 40px;\"><table style=\"border-collapse: collapse; border: 0; background-color: #F4F4F4; height: 70px; table-layout: fixed; word-wrap: break-word; border-radius: 6px;\"><tbody><tr><td style=\"text-align: center; vertical-align: middle; font-size: 30px;\">";
+        msg += link;
+
+        message.setText(msg, "utf-8", "html"); //내용
+        message.setFrom(new InternetAddress("ji17824@gmail.com","ProjectFlow")); //보내는 사람
+
+        return message;
+    }
+
+    public void sendInviteLink(String to)throws Exception {
+        MimeMessage message = createInviteMessage(to);
+        try{//예외처리
+            emailSender.send(message);
+        }catch(MailException es){
+            es.printStackTrace();
+            throw new IllegalArgumentException();
+        }
+    }
 }
