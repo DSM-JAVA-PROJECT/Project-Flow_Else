@@ -5,6 +5,7 @@ import com.asdf148.javaproject.global.redisEntity.email.VerifyCodeRedisRepositor
 import com.asdf148.javaproject.global.redisEntity.user.VerifyUser;
 import com.asdf148.javaproject.global.redisEntity.user.VerifyUserRedisRepository;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -83,12 +84,9 @@ public class EmailService {
     }
 
     //초대 이메일 생성
-    private MimeMessage createInviteMessage(String to)throws Exception{
-        //randomuuid로 유일키 생성
-        //db에 유저 이메일, 프로젝트 아이디, 유일키 저장?
-        //그냥 유저 이메일, 프로젝트 아이디 query로 해서 보낼 수도 있는데
+    private MimeMessage createInviteMessage(String to, ObjectId objectId)throws Exception{
 
-        String link = "";
+        String link = "http://3.36.224.130:8080/project?email="+to+"&&id="+objectId.toString();
 
         logger.info("Send to : "+ to);
         logger.info("Invite Link : " + link);
@@ -108,8 +106,8 @@ public class EmailService {
         return message;
     }
 
-    public void sendInviteLink(String to)throws Exception {
-        MimeMessage message = createInviteMessage(to);
+    public void sendInviteLink(String to, ObjectId objectId)throws Exception {
+        MimeMessage message = createInviteMessage(to, objectId);
         try{//예외처리
             emailSender.send(message);
         }catch(MailException es){
