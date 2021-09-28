@@ -12,10 +12,11 @@ import java.util.Map;
 
 @RequestMapping("/project")
 @RequiredArgsConstructor
+@RestController
 public class ProjectController {
     private final ProjectService projectService;
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<String> createProject(@RequestHeader Map<String, String> header, CreateProject createProject){
         try{
             projectService.createProject(header.get("authorization").substring(7), createProject);
