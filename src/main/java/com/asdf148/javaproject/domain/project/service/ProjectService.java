@@ -39,7 +39,7 @@ public class ProjectService {
         initialPersonnel(token, savedProject.getId(), createProject.getField());
         for(String email: createProject.getEmails()) {
             try{
-                emailService.sendInviteLink(email);
+                emailService.sendInviteLink(email, savedProject.getId());
             }
             catch (Exception e){
                 return e.getMessage();
