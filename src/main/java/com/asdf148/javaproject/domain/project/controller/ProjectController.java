@@ -29,7 +29,7 @@ public class ProjectController {
         }
     }
 
-    @GetMapping("/project")
+    @GetMapping("/person")
     public ResponseEntity<String> addPerson(@RequestParam("email") String email, @RequestParam("id") ObjectId projectId){
         try{
             projectService.addPersonnel(email, projectId);

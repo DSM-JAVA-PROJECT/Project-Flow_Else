@@ -86,7 +86,7 @@ public class EmailService {
     //초대 이메일 생성
     private MimeMessage createInviteMessage(String to, ObjectId objectId)throws Exception{
 
-        String link = "http://3.36.224.130:8080/project?email="+to+"&&id="+objectId.toString();
+        String link = "http://3.36.224.130:8080/project/person?email="+to+"&&id="+objectId.toString();
 
         logger.info("Send to : "+ to);
         logger.info("Invite Link : " + link);
