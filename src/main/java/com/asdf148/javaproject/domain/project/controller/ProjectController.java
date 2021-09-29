@@ -17,13 +17,13 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping
-    public ResponseEntity<String> createProject(@RequestHeader Map<String, String> header, CreateProject createProject){
+    public ResponseEntity<String> createProject(@RequestHeader Map<String, String> header, @RequestBody  CreateProject createProject){
         try{
             projectService.createProject(header.get("authorization").substring(7), createProject);
             return new ResponseEntity<>("Success", HttpStatus.CREATED);
         }
         catch(Exception e){
-            System.out.println(e.getMessage());
+            System.out.println("projectController /: " + e.getMessage());
             System.out.println(e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

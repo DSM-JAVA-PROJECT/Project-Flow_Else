@@ -6,6 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class CreateProject {
@@ -24,7 +25,7 @@ public class CreateProject {
     @NotBlank
     private String logoImage;
 
-    private ArrayList<String> emails;
+    private List<String> email;
 
     private String field;
 }

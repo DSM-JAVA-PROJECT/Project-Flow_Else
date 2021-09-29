@@ -22,7 +22,7 @@ public class ProjectService {
     private final JwtToken jwtToken;
     private final EmailService emailService;
 
-    public String createProject(String token, CreateProject createProject){
+    public String createProject(String token, CreateProject createProject) throws Exception {
         TokenContent tokenContext = jwtToken.decodeToken(token);
 
         Project project = Project.builder()
@@ -37,19 +37,21 @@ public class ProjectService {
         Project savedProject = projectRepository.save(project);
 
         initialPersonnel(token, savedProject.getId(), createProject.getField());
-        for(String email: createProject.getEmails()) {
+
+        for(String email: createProject.getEmail()) {
             try{
                 emailService.sendInviteLink(email, savedProject.getId());
             }
             catch (Exception e){
+                System.out.println("sendInviteLink" + e.getMessage());
                 return e.getMessage();
             }
         }
 
-        return "sucess";
+        return "Success";
     }
 
-    public void initialPersonnel(String token, ObjectId projectId, String field){
+    public void initialPersonnel(String token, ObjectId projectId, String field) {
         TokenContent tokenContext = jwtToken.decodeToken(token);
 
         Project project = projectRepository.findById(projectId).orElseThrow();
@@ -62,7 +64,6 @@ public class ProjectService {
         project.getProjectUsers().add(projectUser);
 
         projectRepository.save(project);
-
     }
 
     public void addPersonnel(String email, ObjectId projectId){

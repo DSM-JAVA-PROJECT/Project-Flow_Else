@@ -30,7 +30,7 @@ public class JwtToken {
                 .setIssuer("server")
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + Duration.ofMinutes(10).toMillis()))
-                .claim("id", user.getId())
+                .claim("id", user.getId().toString())
                 .claim("email", user.getEmail())
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
@@ -55,7 +55,9 @@ public class JwtToken {
     public TokenContent decodeToken(String token) {
         Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
 
-        TokenContent tokenContent = new TokenContent(new ObjectId(String.valueOf(claims.getBody().get("id"))), String.valueOf(claims.getBody().get("email")));
+        System.out.println("decodeToken: " + claims.getBody().get("id").toString());
+        System.out.println(new ObjectId(claims.getBody().get("id").toString()));
+        TokenContent tokenContent = new TokenContent(new ObjectId(claims.getBody().get("id").toString()), String.valueOf(claims.getBody().get("email")));
 
         return tokenContent;
     }
