@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.mail.Message;
@@ -106,9 +107,10 @@ public class EmailService {
         return message;
     }
 
+    @Async
     public void sendInviteLink(String to, ObjectId objectId)throws Exception {
         MimeMessage message = createInviteMessage(to, objectId);
-        try{//예외처리
+        try{
             emailSender.send(message);
         }catch(MailException es){
             es.printStackTrace();

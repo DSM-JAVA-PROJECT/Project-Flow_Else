@@ -26,6 +26,4 @@ public class CreateProject {
     private String logoImage;
 
     private List<String> email;
-
-    private String field;
 }

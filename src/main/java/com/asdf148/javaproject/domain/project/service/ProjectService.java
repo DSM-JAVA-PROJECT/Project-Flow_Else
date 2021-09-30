@@ -1,6 +1,7 @@
 package com.asdf148.javaproject.domain.project.service;
 
 import com.asdf148.javaproject.domain.auth.entity.UserRepository;
+import com.asdf148.javaproject.domain.chatRoom.service.ChatRoomService;
 import com.asdf148.javaproject.domain.email.service.EmailService;
 import com.asdf148.javaproject.domain.project.dto.CreateProject;
 import com.asdf148.javaproject.domain.project.dto.ModifyProject;
@@ -21,9 +22,12 @@ public class ProjectService {
 
     private final JwtToken jwtToken;
     private final EmailService emailService;
+    private final ChatRoomService chatRoomService;
 
     public String createProject(String token, CreateProject createProject) throws Exception {
         TokenContent tokenContext = jwtToken.decodeToken(token);
+
+        System.out.println("point 1");
 
         Project project = Project.builder()
                 .projectName(createProject.getProjectName())
@@ -36,7 +40,18 @@ public class ProjectService {
 
         Project savedProject = projectRepository.save(project);
 
-        initialPersonnel(token, savedProject.getId(), createProject.getField());
+        System.out.println("point 2");
+
+        initialPersonnel(token, savedProject.getId());
+
+        System.out.println("point 3");
+        try {
+            chatRoomService.initialChatRoom(token, savedProject.getId());
+        }catch (Exception e){
+            System.out.println("initialCheatRoom Fail: " + e.getMessage());
+            return e.getMessage();
+        }
+        System.out.println("point 4");
 
         for(String email: createProject.getEmail()) {
             try{
@@ -51,14 +66,13 @@ public class ProjectService {
         return "Success";
     }
 
-    public void initialPersonnel(String token, ObjectId projectId, String field) {
+    public void initialPersonnel(String token, ObjectId projectId) {
         TokenContent tokenContext = jwtToken.decodeToken(token);
 
         Project project = projectRepository.findById(projectId).orElseThrow();
 
         ProjectUser projectUser = ProjectUser.builder()
                 .user(userRepository.findByEmail(tokenContext.getEmail()).orElseThrow())
-                .field(field)
                 .build();
 
         project.getProjectUsers().add(projectUser);
