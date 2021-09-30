@@ -27,9 +27,10 @@ public class EmailService {
 
     private final JavaMailSender emailSender;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    public static final String ePw = createKey();
 
     private MimeMessage createMessage(String to)throws Exception{
+        final String ePw = createKey();
+
         VerifyCode emailCode = new VerifyCode(to, ePw);
         verifyCodeRedisRepository.save(emailCode);
 
@@ -59,6 +60,7 @@ public class EmailService {
         for (int i = 0; i < 6; i++) { // 인증코드 6자리
             key.append((rnd.nextInt(10)));
         }
+
         return key.toString();
     }
 

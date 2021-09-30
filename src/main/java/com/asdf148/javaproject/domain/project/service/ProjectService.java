@@ -13,6 +13,8 @@ import com.asdf148.javaproject.global.dto.TokenContent;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 @RequiredArgsConstructor
 @Service
@@ -24,34 +26,27 @@ public class ProjectService {
     private final EmailService emailService;
     private final ChatRoomService chatRoomService;
 
-    public String createProject(String token, CreateProject createProject) throws Exception {
+    public String createProject(String token, MultipartFile file, CreateProject createProject) throws Exception {
         TokenContent tokenContext = jwtToken.decodeToken(token);
-
-        System.out.println("point 1");
 
         Project project = Project.builder()
                 .projectName(createProject.getProjectName())
                 .explanation(createProject.getExplanation())
                 .startDate(createProject.getStartDate())
                 .endDate(createProject.getEndDate())
-                .logoImage(createProject.getLogoImage())
+//                .logoImage(createProject.getLogoImage())
                 .pm(userRepository.findById(tokenContext.getId()).orElseThrow())
                 .build();
 
         Project savedProject = projectRepository.save(project);
 
-        System.out.println("point 2");
-
         initialPersonnel(token, savedProject.getId());
-
-        System.out.println("point 3");
         try {
             chatRoomService.initialChatRoom(token, savedProject.getId());
         }catch (Exception e){
             System.out.println("initialCheatRoom Fail: " + e.getMessage());
             return e.getMessage();
         }
-        System.out.println("point 4");
 
         for(String email: createProject.getEmail()) {
             try{

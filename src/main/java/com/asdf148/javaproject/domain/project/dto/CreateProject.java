@@ -22,8 +22,5 @@ public class CreateProject {
     @NotNull
     private LocalDate endDate;
 
-    @NotBlank
-    private String logoImage;
-
     private List<String> email;
 }

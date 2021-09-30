@@ -7,6 +7,8 @@ import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.util.Map;
 
@@ -17,9 +19,9 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping
-    public ResponseEntity<String> createProject(@RequestHeader Map<String, String> header, @RequestBody  CreateProject createProject){
+    public ResponseEntity<String> createProject(@RequestHeader Map<String, String> header, @RequestPart MultipartFile file, @RequestBody  CreateProject createProject){
         try{
-            projectService.createProject(header.get("authorization").substring(7), createProject);
+            projectService.createProject(header.get("authorization").substring(7), file, createProject);
             return new ResponseEntity<>("Success", HttpStatus.CREATED);
         }
         catch(Exception e){
