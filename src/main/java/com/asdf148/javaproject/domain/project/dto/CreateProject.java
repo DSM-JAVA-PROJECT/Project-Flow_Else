@@ -1,6 +1,7 @@
 package com.asdf148.javaproject.domain.project.dto;
 
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -21,6 +22,8 @@ public class CreateProject {
 
     @NotNull
     private LocalDate endDate;
+
+    private MultipartFile file;
 
     private List<String> email;
 }

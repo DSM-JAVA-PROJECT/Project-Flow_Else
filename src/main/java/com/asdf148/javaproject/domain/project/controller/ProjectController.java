@@ -20,12 +20,14 @@ public class ProjectController {
     private final ProjectService projectService;
     private final S3Upload s3Upload;
 
+//    @RequestParam("file") MultipartFile file, @RequestBody  CreateProject createProject
+
     @PostMapping
-    public ResponseEntity<String> createProject(@RequestHeader Map<String, String> header, @RequestParam("file") MultipartFile file, @RequestBody  CreateProject createProject){
+    public ResponseEntity<String> createProject(@RequestHeader Map<String, String> header, @ModelAttribute CreateProject createProject){
         String imgUrl = "";
 
         try{
-            imgUrl = s3Upload.upload(file, "project");
+            imgUrl = s3Upload.upload(createProject.getFile(), "project");
         } catch (Exception e){
             System.out.println(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
