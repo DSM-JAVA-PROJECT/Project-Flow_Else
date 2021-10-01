@@ -2,6 +2,7 @@ package com.asdf148.javaproject.domain.project.controller;
 
 import com.asdf148.javaproject.domain.project.dto.CreateProject;
 import com.asdf148.javaproject.domain.project.service.ProjectService;
+import com.asdf148.javaproject.global.S3Upload;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
@@ -17,11 +18,21 @@ import java.util.Map;
 @RestController
 public class ProjectController {
     private final ProjectService projectService;
+    private final S3Upload s3Upload;
 
     @PostMapping
-    public ResponseEntity<String> createProject(@RequestHeader Map<String, String> header, @RequestPart MultipartFile file, @RequestBody  CreateProject createProject){
+    public ResponseEntity<String> createProject(@RequestHeader Map<String, String> header, @RequestParam("file") MultipartFile file, @RequestBody  CreateProject createProject){
+        String imgUrl = "";
+
         try{
-            projectService.createProject(header.get("authorization").substring(7), file, createProject);
+            imgUrl = s3Upload.upload(file, "project");
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        try{
+            projectService.createProject(header.get("authorization").substring(7), imgUrl, createProject);
             return new ResponseEntity<>("Success", HttpStatus.CREATED);
         }
         catch(Exception e){

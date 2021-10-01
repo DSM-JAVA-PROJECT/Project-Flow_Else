@@ -26,7 +26,7 @@ public class ProjectService {
     private final EmailService emailService;
     private final ChatRoomService chatRoomService;
 
-    public String createProject(String token, MultipartFile file, CreateProject createProject) throws Exception {
+    public String createProject(String token, String imgUrl, CreateProject createProject) throws Exception {
         TokenContent tokenContext = jwtToken.decodeToken(token);
 
         Project project = Project.builder()
@@ -34,7 +34,7 @@ public class ProjectService {
                 .explanation(createProject.getExplanation())
                 .startDate(createProject.getStartDate())
                 .endDate(createProject.getEndDate())
-//                .logoImage(createProject.getLogoImage())
+                .logoImage(imgUrl)
                 .pm(userRepository.findById(tokenContext.getId()).orElseThrow())
                 .build();
 
