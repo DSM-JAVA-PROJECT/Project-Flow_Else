@@ -4,6 +4,7 @@ import com.asdf148.javaproject.domain.auth.entity.User;
 import com.asdf148.javaproject.domain.chatRoom.entity.ChatRoom;
 import com.asdf148.javaproject.domain.project.entity.ProjectUser;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import javax.validation.constraints.NotBlank;
@@ -12,10 +13,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Getter
+@Setter
 public class ModifyProject {
     private String projectName;
     private String explanation;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private String startDate;
+    private String endDate;
     private String logoImage;
 }

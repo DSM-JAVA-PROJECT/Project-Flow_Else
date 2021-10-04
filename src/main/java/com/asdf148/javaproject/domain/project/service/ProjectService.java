@@ -13,8 +13,9 @@ import com.asdf148.javaproject.global.dto.TokenContent;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @RequiredArgsConstructor
 @Service
@@ -32,8 +33,8 @@ public class ProjectService {
         Project project = Project.builder()
                 .projectName(createProject.getProjectName())
                 .explanation(createProject.getExplanation())
-                .startDate(createProject.getStartDate())
-                .endDate(createProject.getEndDate())
+                .startDate(LocalDate.parse(createProject.getStartDate(), DateTimeFormatter.ISO_DATE))
+                .endDate(LocalDate.parse(createProject.getEndDate(), DateTimeFormatter.ISO_DATE))
                 .logoImage(imgUrl)
                 .pm(userRepository.findById(tokenContext.getId()).orElseThrow())
                 .build();
@@ -48,7 +49,7 @@ public class ProjectService {
             return e.getMessage();
         }
 
-        for(String email: createProject.getEmail()) {
+        for(String email: createProject.getEmails()) {
             try{
                 emailService.sendInviteLink(email, savedProject.getId());
             }

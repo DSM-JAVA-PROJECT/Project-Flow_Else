@@ -8,8 +8,6 @@ import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.util.Map;
 
@@ -20,18 +18,15 @@ public class ProjectController {
     private final ProjectService projectService;
     private final S3Upload s3Upload;
 
-//    @RequestParam("file") MultipartFile file, @RequestBody  CreateProject createProject
-
     @PostMapping
-    public ResponseEntity<String> createProject(@RequestHeader Map<String, String> header, @ModelAttribute CreateProject createProject){
+    public ResponseEntity<String> createProject(@RequestHeader Map<String, String> header, @ModelAttribute("createProject") CreateProject createProject){
         String imgUrl = "";
 
-        System.out.println("CreateProject: " + createProject.getEmail());
-
         try{
+            System.out.println(createProject.getProjectName());
             imgUrl = s3Upload.upload(createProject.getFile(), "project");
         } catch (Exception e){
-            System.out.println("S3 Upload" + e.getMessage());
+            System.out.println("S3 Upload: " + e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 

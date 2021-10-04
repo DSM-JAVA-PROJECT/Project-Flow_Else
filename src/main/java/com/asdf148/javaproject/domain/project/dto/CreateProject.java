@@ -1,6 +1,8 @@
 package com.asdf148.javaproject.domain.project.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 public class CreateProject {
 
     @NotBlank
@@ -18,12 +21,12 @@ public class CreateProject {
     private String explanation;
 
     @NotNull
-    private LocalDate startDate;
+    private String startDate;
 
     @NotNull
-    private LocalDate endDate;
+    private String endDate;
 
     private MultipartFile file;
 
-    private List<String> email;
+    private List<String> emails;
 }
