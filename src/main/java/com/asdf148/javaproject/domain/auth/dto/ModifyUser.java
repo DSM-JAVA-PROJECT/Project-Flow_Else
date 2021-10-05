@@ -1,10 +1,13 @@
 package com.asdf148.javaproject.domain.auth.dto;
 
 import lombok.Getter;
+import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Size;
 
 @Getter
+@Setter
 public class ModifyUser {
     private String name;
 
@@ -14,5 +17,5 @@ public class ModifyUser {
     @Size(min = 8, max = 16, message = "8자 이상 16자 이하여야 합니다.")
     private String password;
 
-    private String profile_image;
+    private MultipartFile File;
 }

@@ -4,6 +4,7 @@ import com.asdf148.javaproject.domain.auth.dto.ModifyUser;
 import com.asdf148.javaproject.domain.auth.dto.SignInUser;
 import com.asdf148.javaproject.domain.auth.dto.SignUpUser;
 import com.asdf148.javaproject.domain.auth.service.AuthService;
+import com.asdf148.javaproject.global.S3Upload;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
-
+    private final S3Upload s3Upload;
     private final AuthService authService;
 
     @PostMapping("/join")
@@ -53,12 +54,22 @@ public class AuthController {
         }
     }
 
-    @PutMapping("/modify")
-    public ResponseEntity<String> Modify(@RequestHeader Map<String, String> header, @RequestBody ModifyUser modifyUser){
+    @PutMapping("/")
+    public ResponseEntity<String> modify(@RequestHeader Map<String, String> header, @ModelAttribute("modifyUser") ModifyUser modifyUser){
+        String imgUrl = "";
+
         try{
-            authService.modifyUser(header.get("authorization").substring(7), modifyUser);
-            return new ResponseEntity<>("modified", HttpStatus.OK);
+            System.out.println(modifyUser.getName());
+            imgUrl = s3Upload.upload(modifyUser.getFile(), "profile");
+        } catch (Exception e){
+            System.out.println("AuthController modify S3 Upload: " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        try{
+            return new ResponseEntity<>(authService.modifyUser(header.get("authorization").substring(7), imgUrl, modifyUser), HttpStatus.OK);
         }catch (Exception e){
+            System.out.println("AuthController modify: " + e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

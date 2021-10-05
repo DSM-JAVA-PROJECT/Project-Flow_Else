@@ -89,14 +89,18 @@ public class AuthService {
         System.out.println("myPage: " + user.getName());
 
         return myPageUser;
-
-
     }
 
-    public void modifyUser(String token, ModifyUser modifyUser) throws Exception{
+    public String modifyUser(String token, String imgUrl, ModifyUser modifyUser) throws Exception{
         TokenContent tokenContext = jwtToken.decodeToken(token);
 
-        User user = userRepository.findByEmail(tokenContext.getEmail()).orElseThrow();
+        User user = User.builder().build();
+
+        try{
+            user = userRepository.findByEmail(tokenContext.getEmail()).orElseThrow();
+        }catch (Exception e){
+            System.out.println("AuthService modifyUser can't find user: " + e.getMessage());
+        }
 
         User updateUser = User.builder()
                 .id(user.getId())
@@ -104,11 +108,18 @@ public class AuthService {
                 .email(user.getEmail())
                 .password(passwordEncoder.encode(modifyUser.getPassword()))
                 .phoneNumber(modifyUser.getPhone_number())
-                .profileImage(modifyUser.getProfile_image())
+                .profileImage(imgUrl)
                 .projects(user.getProjects())
                 .build();
 
-        userRepository.save(updateUser);
+        try{
+            userRepository.save(updateUser);
+        }catch (Exception e){
+            System.out.println("AuthService modifyUser fail save: " + e.getMessage());
+            throw new Exception(e.getMessage());
+        }
+
+        return "Modified";
     }
 
     public void addProject(String token, ObjectId projectId){
