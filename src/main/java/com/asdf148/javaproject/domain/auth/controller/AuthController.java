@@ -48,6 +48,7 @@ public class AuthController {
             return new ResponseEntity<>(authService.myPage(header.get("authorization").substring(7)), HttpStatus.OK);
         }
         catch(Exception e){
+            System.out.println(e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

@@ -1,24 +1,31 @@
 package com.asdf148.javaproject.domain.auth.service;
 
-import com.asdf148.javaproject.domain.auth.dto.ModifyUser;
-import com.asdf148.javaproject.domain.auth.dto.MyPageUser;
-import com.asdf148.javaproject.domain.auth.dto.SignInUser;
-import com.asdf148.javaproject.domain.auth.dto.SignUpUser;
+import com.asdf148.javaproject.domain.auth.dto.*;
 import com.asdf148.javaproject.domain.auth.entity.User;
 import com.asdf148.javaproject.domain.auth.entity.UserRepository;
+import com.asdf148.javaproject.domain.project.dto.MyPageProjects;
+import com.asdf148.javaproject.domain.project.entity.Project;
+import com.asdf148.javaproject.domain.project.entity.ProjectRepository;
 import com.asdf148.javaproject.global.config.JwtToken;
 import com.asdf148.javaproject.global.dto.ReturnToken;
 import com.asdf148.javaproject.global.dto.TokenContent;
 import com.asdf148.javaproject.global.redisEntity.user.VerifyUserRedisRepository;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class AuthService {
 
     private final UserRepository userRepository;
+
+    private final ProjectRepository projectRepository;
 
     private final VerifyUserRedisRepository verifyUserRedisRepository;
 
@@ -28,15 +35,16 @@ public class AuthService {
 
     public String signUp(SignUpUser s_user) throws Exception {
 
-        if (verifyUserRedisRepository.findById(s_user.getEmail()).isEmpty()) {
-            throw new Exception("인증되지 않은 이메일 입니다.");
-        }
+//        if (verifyUserRedisRepository.findById(s_user.getEmail()).isEmpty()) {
+//            throw new Exception("인증되지 않은 이메일 입니다.");
+//        }
 
         User user = User.builder()
                 .name(s_user.getName())
                 .email(s_user.getEmail())
                 .password(passwordEncoder.encode(s_user.getPassword()))
                 .phoneNumber(s_user.getPhone_number())
+                .projects(new ArrayList<Project>())
                 .build();
 
         userRepository.save(user);
@@ -63,17 +71,26 @@ public class AuthService {
     public MyPageUser myPage(String token) throws Exception{
         TokenContent tokenContext = jwtToken.decodeToken(token);
 
-        User user = userRepository.findByEmail(tokenContext.getEmail()).orElseThrow();
+        User user = userRepository.findById(tokenContext.getId()).orElseThrow();
 
         MyPageUser myPageUser = MyPageUser.builder()
                 .name(user.getName())
-                .phone_number(user.getPhoneNumber())
-                .projects(user.getProjects())
+                .profileImage(user.getProfileImage())
+                .projects(user.getProjects().stream().filter( project -> project.getEndDate().compareTo(LocalDate.now()) < 0 ).collect(Collectors.toList()).stream().map(
+                        project -> MyPageProjects.builder()
+                                .projectName(project.getProjectName())
+                                .isFinished(project.isFinished())
+                                .startDate(project.getStartDate())
+                                .endDate(project.getEndDate())
+                                .build()
+                ).collect(Collectors.toList()))
                 .build();
 
-        System.out.println(user);
+        System.out.println("myPage: " + user.getName());
 
         return myPageUser;
+
+
     }
 
     public void modifyUser(String token, ModifyUser modifyUser) throws Exception{
@@ -90,6 +107,27 @@ public class AuthService {
                 .profileImage(modifyUser.getProfile_image())
                 .projects(user.getProjects())
                 .build();
+
+        userRepository.save(updateUser);
+    }
+
+    public void addProject(String token, ObjectId projectId){
+        TokenContent tokenContext = jwtToken.decodeToken(token);
+
+        User user = userRepository.findById(tokenContext.getId()).orElseThrow();
+        Project project = projectRepository.findById(projectId).orElseThrow();
+
+        User updateUser = User.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .phoneNumber(user.getPhoneNumber())
+                .profileImage(user.getProfileImage())
+                .projects(user.getProjects())
+                .build();
+
+        updateUser.getProjects().add(project);
 
         userRepository.save(updateUser);
     }
