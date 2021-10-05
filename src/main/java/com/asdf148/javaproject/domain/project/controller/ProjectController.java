@@ -1,6 +1,7 @@
 package com.asdf148.javaproject.domain.project.controller;
 
 import com.asdf148.javaproject.domain.project.dto.CreateProject;
+import com.asdf148.javaproject.domain.project.dto.ModifyProject;
 import com.asdf148.javaproject.domain.project.service.ProjectService;
 import com.asdf148.javaproject.global.S3Upload;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,26 @@ public class ProjectController {
             projectService.addPersonnel(email, projectId);
             return new ResponseEntity<>("Success", HttpStatus.OK);
         }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> modifyProject(@RequestHeader Map<String, String> header, @PathVariable("id") ObjectId id, @ModelAttribute("modifyProject") ModifyProject modifyProject){
+        String imgUrl = "";
+
+        try{
+            System.out.println(modifyProject.getProjectName());
+            imgUrl = s3Upload.upload(modifyProject.getFile(), "project");
+        } catch (Exception e){
+            System.out.println("ProjectController modifyProject S3 Upload: " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        try{
+            return new ResponseEntity<>(projectService.modifyProject(header.get("authorization").substring(7), id, imgUrl, modifyProject), HttpStatus.OK);
+        }catch (Exception e){
+            System.out.println("ProjectController modifyProject: " + e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

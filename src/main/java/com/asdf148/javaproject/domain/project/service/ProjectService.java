@@ -99,16 +99,36 @@ public class ProjectService {
 
     }
 
-    public void modifyProject(String token, ObjectId id, ModifyProject modifyProject) throws Exception{
+    public String modifyProject(String token, ObjectId id, String imgUrl, ModifyProject modifyProject) throws Exception{
         TokenContent tokenContext = jwtToken.decodeToken(token);
         //프로젝트인원에서 권한확인
         if(!projectRepository.findById(id).orElseThrow().getPm().equals(userRepository.findById(tokenContext.getId()))){
-            new Exception("권한이 없습니다.");
+            throw new Exception("권한이 없습니다.");
         }
 
-        Project project = projectRepository.findById(id).orElseThrow();
+        try{
+            Project project = projectRepository.findById(id).orElseThrow();
+        }catch (Exception e){
+            System.out.println("ProjectService modifyProject can't find project: " + e.getMessage());
+        }
 
-        projectRepository.save(project);
+        Project updateProject = Project.builder()
+                .projectName(modifyProject.getProjectName())
+                .explanation(modifyProject.getExplanation())
+                .startDate(LocalDate.parse(modifyProject.getStartDate(), DateTimeFormatter.ISO_DATE))
+                .endDate(LocalDate.parse(modifyProject.getStartDate(), DateTimeFormatter.ISO_DATE))
+                .logoImage(imgUrl)
+                .build();
+
+
+        try{
+            projectRepository.save(updateProject);
+        }catch (Exception e){
+            System.out.println("Fail save");
+            throw new Exception(e.getMessage());
+        }
+
+        return "Modified";
     }
 
     public String deleteProject(String token, ObjectId projectId) throws Exception{
