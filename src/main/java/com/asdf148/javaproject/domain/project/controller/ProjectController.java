@@ -41,6 +41,15 @@ public class ProjectController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProject(@RequestHeader Map<String, String> header, @PathVariable("id") ObjectId projectId){
+        try{
+            return new ResponseEntity<>(projectService.deleteProject(header.get("authorization").substring(7), projectId), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping("/person")
     public ResponseEntity<String> addPerson(@RequestParam("email") String email, @RequestParam("id") ObjectId projectId){
         try{

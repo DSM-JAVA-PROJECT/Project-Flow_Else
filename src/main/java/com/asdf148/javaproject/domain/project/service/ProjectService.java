@@ -111,14 +111,20 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
-    public void deleteProject(String token, ObjectId id) throws Exception{
+    public String deleteProject(String token, ObjectId projectId) throws Exception{
         TokenContent tokenContext = jwtToken.decodeToken(token);
         //프로젝트인원에서 권한확인
-        if(!projectRepository.findById(id).orElseThrow().getPm().equals(userRepository.findById(tokenContext.getId()))){
-            new Exception("권한이 없습니다.");
+        if(!projectRepository.findById(projectId).orElseThrow().getPm().equals(userRepository.findById(tokenContext.getId()))){
+            throw new Exception("권한이 없습니다.");
         }
 
-        projectRepository.delete(projectRepository.findById(id).orElseThrow());
+        try{
+            projectRepository.delete(projectRepository.findById(projectId).orElseThrow());
+        }catch (Exception e){
+            return e.getMessage();
+        }
+
+        return "Success";
     }
 //
 //    public String addSchedule(String token, String projectId, CreateSchedule createSchedule){
@@ -186,30 +192,6 @@ public class ProjectService {
 //        }
 //    }
 //
-//    public String completeSchedule(String token, String scheduleId){
-//        try{
-//            TokenContent tokenContext = jwtToken.decodeToken(token);
-//
-//            ProjectSchedule projectSchedule = projectScheduleRepository.findById(Long.valueOf(scheduleId)).orElseThrow();
-//
-//            projectScheduleRepository.save(
-//                    new ProjectSchedule(
-//                            projectSchedule.getId(),
-//                            projectSchedule.getContent(),
-//                            "completed",
-//                            projectSchedule.getProject(),
-//                            projectSchedule.getStarted_at(),
-//                            projectSchedule.getEnded_at(),
-//                            projectSchedule.getPersonnels()
-//                    )
-//            );
-//
-//            return "modified";
-//        }catch (Exception e){
-//            new Exception(e.getMessage());
-//            return "error";
-//        }
-//    }
 //
 //    public void joinSchedule(String token, String scheduleId){
 //        try{

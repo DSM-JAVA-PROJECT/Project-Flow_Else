@@ -27,7 +27,6 @@ public class Plan {
     @NotNull
     private LocalDate startDate;
 
-    @NotNull
     private LocalDate finishDate;
 
     private List<PlanUser> planUsers;
@@ -39,5 +38,9 @@ public class Plan {
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.planUsers = new ArrayList<>();
+    }
+
+    public void setFinishDate(LocalDate finishDate) {
+        this.finishDate = finishDate;
     }
 }
