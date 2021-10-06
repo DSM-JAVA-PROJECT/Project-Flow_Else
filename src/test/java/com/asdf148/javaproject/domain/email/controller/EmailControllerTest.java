@@ -27,35 +27,35 @@ public class EmailControllerTest {
     @MockBean
     UserRepository userRepository;
 
-    @Test
-    @DisplayName("이메일 인증코드 전송")
-    void SendEmailVerifyCode() throws Exception {
-
-        final ResultActions actions = mvc.perform(post("/email/")
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)
-            .characterEncoding("UTF-8")
-            .content( "{" + " \"email\" : \"test@test.com\" "+ "}"));
-
-        actions.andExpect(status().isOk());
-    }
-
-    // redis도 써야 되나?
-    @Test
-    @Disabled
-    @DisplayName("이메일 인증코드 인증")
-    void VerifyCode() throws Exception {
-
-        String verifyCode = "123456";
-
-        given(emailService.verifyCode(verifyCode)).willReturn("sucess");
-
-        final ResultActions actions = mvc.perform(post("email/verifyCode")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content( "{" + " \"email\" : " + 123456 + "}"));
-
-        actions.andExpect(status().isOk());
-    }
+//    @Test
+//    @DisplayName("이메일 인증코드 전송")
+//    void SendEmailVerifyCode() throws Exception {
+//
+//        final ResultActions actions = mvc.perform(post("/email/")
+//            .contentType(MediaType.APPLICATION_JSON)
+//            .accept(MediaType.APPLICATION_JSON)
+//            .characterEncoding("UTF-8")
+//            .content( "{" + " \"email\" : \"test@test.com\" "+ "}"));
+//
+//        actions.andExpect(status().isOk());
+//    }
+//
+//    // redis도 써야 되나?
+//    @Test
+//    @Disabled
+//    @DisplayName("이메일 인증코드 인증")
+//    void VerifyCode() throws Exception {
+//
+//        String verifyCode = "123456";
+//
+//        given(emailService.verifyCode(verifyCode)).willReturn("Success");
+//
+//        final ResultActions actions = mvc.perform(post("email/verifyCode")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON)
+//                .characterEncoding("UTF-8")
+//                .content( "{" + " \"email\" : " + 123456 + "}"));
+//
+//        actions.andExpect(status().isOk());
+//    }
 }
