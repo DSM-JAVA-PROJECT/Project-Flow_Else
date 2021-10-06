@@ -1,5 +1,6 @@
 package com.asdf148.javaproject.global;
 
+import com.asdf148.javaproject.domain.auth.service.CustomOAuth2UserService;
 import com.asdf148.javaproject.global.config.user.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
+
+    private final CustomOAuth2UserService customOAuth2UserService;
 
 //    @Autowired
 //    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
@@ -41,6 +44,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and()
                 .cors().disable()
                 .csrf().disable()
-                .formLogin().disable();
+                .formLogin().disable()
+                .oauth2Login()
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService);
     }
 }

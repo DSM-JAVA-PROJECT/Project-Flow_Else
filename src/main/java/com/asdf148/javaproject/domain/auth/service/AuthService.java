@@ -67,7 +67,7 @@ public class AuthService {
             throw new Exception("비밀번호가 잘못되었습니다.");
         }
         return ReturnToken.builder()
-                .accessToken(jwtToken.createToken(user))
+                .accessToken(jwtToken.createAccessToken(user))
                 .refreshToken(jwtToken.createRefreshToken(user))
                 .build();
     }

@@ -22,7 +22,7 @@ public class JwtToken {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-    public String createToken(User user) {
+    public String createAccessToken(User user) {
         Date now = new Date();
 
         return Jwts.builder()
@@ -45,7 +45,7 @@ public class JwtToken {
                 .setIssuer("server")
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + Duration.ofDays(14).toMillis()))
-                .claim("id", user.getId())
+                .claim("id", user.getId().toString())
                 .claim("email", user.getEmail())
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
