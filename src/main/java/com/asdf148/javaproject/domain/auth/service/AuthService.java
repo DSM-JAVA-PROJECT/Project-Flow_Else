@@ -35,6 +35,10 @@ public class AuthService {
 
     public String signUp(SignUpUser s_user) throws Exception {
 
+        if(userRepository.findByEmail(s_user.getEmail()).isPresent()){
+            throw new Exception("이미 존재하는 이메일 입니다.");
+        }
+
 //        if (verifyUserRedisRepository.findById(s_user.getEmail()).isEmpty()) {
 //            throw new Exception("인증되지 않은 이메일 입니다.");
 //        }
