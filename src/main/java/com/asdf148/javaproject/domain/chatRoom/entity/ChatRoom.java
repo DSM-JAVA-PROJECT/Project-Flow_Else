@@ -28,4 +28,6 @@ public class ChatRoom {
     private List<User> userIds;
 
     private List<Plan> plans;
+
+    private String roomImage;
 }
