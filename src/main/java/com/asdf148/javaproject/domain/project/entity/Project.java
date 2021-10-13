@@ -2,6 +2,7 @@ package com.asdf148.javaproject.domain.project.entity;
 
 import com.asdf148.javaproject.domain.chatRoom.entity.ChatRoom;
 import com.asdf148.javaproject.domain.auth.entity.User;
+import com.asdf148.javaproject.domain.plan.entity.Plan;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -43,6 +44,8 @@ public class Project {
 
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
+    private List<Plan> plans = new ArrayList<>();
+
     private boolean isFinished;
 
     @NotBlank
@@ -61,5 +64,6 @@ public class Project {
         this.projectUsers = new ArrayList<>();
         this.isFinished = false;
         this.pm = pm;
+        this.plans = new ArrayList<>();
     }
 }
