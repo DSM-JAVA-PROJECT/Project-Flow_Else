@@ -14,7 +14,9 @@ import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -70,15 +72,17 @@ public class PlanService {
                 .build();
     }
 
-    public List<PlanDetail> planDetail(ObjectId projectId, LocalDate date){
+    public List<PlanDetail> planDetail(ObjectId projectId, String date){
 
         Project project = projectRepository.findById(projectId).orElseThrow();
         List<Plan> plans = project.getPlans();
         List<PlanDetail> planDetails = new ArrayList<PlanDetail>();
 
+        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+
         for (Plan plan: plans){
 
-            if(plan.getStartDate().compareTo(date) >= 0 && plan.getEndDate().compareTo(date) <= 0){
+            if(plan.getStartDate().compareTo(localDate) >= 0 && plan.getEndDate().compareTo(localDate) <= 0){
 
                 planDetails.add(PlanDetail.builder()
                         .name(plan.getName())
