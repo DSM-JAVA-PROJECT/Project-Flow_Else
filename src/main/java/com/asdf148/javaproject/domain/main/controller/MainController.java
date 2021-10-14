@@ -17,22 +17,13 @@ public class MainController {
     private final MainService mainService;
 
     @GetMapping()
-    public ResponseEntity<MainPageResponse> MainPage(@RequestHeader Map<String, String> header){
+    public ResponseEntity<Object> MainPage(@RequestHeader Map<String, String> header){
         try{
-            MainPageResponse mainPageResponse = MainPageResponse.builder()
-                    .mainPageProjects(mainService.mainPage(header.get("authorization").substring(7)))
-                    .build();
-
-            return new ResponseEntity<>(mainPageResponse, HttpStatus.OK);
+            return new ResponseEntity<>(mainService.mainPage(header.get("authorization").substring(7)), HttpStatus.OK);
         }catch (Exception e){
-            MainPageResponse mainPageResponse = MainPageResponse.builder()
-                    .errorMessage(e.getMessage())
-                    .build();
-
             System.out.println(e.getMessage());
-            System.out.println(e.getClass());
-
-            return new ResponseEntity<>(mainPageResponse, HttpStatus.BAD_REQUEST);
+            System.out.println(e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }
