@@ -14,7 +14,7 @@ public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
 
-    @GetMapping("/{projectId}")
+    @GetMapping("/{projectId}/rooms")
     public ChatRoomListResponse getChatRoomList(@PathVariable ObjectId projectId) {
         return chatRoomService.getProjectChatRooms(projectId);
     }

@@ -18,12 +18,12 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping
+    @GetMapping("/member")
     public ProjectMemberListResponse getMemberList(@AuthenticationPrincipal Principal principal, @PathVariable String projectId) {
         return memberService.getMemberList(principal.getName(), projectId);
     }
 
-    @GetMapping("/{chatRoomId}")
+    @GetMapping("/member/{chatRoomId}")
     public ProjectMemberListResponse getNotParticipatedMemberList(@AuthenticationPrincipal Principal principal, @PathVariable String projectId, @PathVariable String chatRoomId) {
         return memberService.getNotParticipatedMemberList(principal.getName(), projectId, chatRoomId);
     }
