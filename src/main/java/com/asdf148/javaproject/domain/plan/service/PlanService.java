@@ -3,6 +3,7 @@ package com.asdf148.javaproject.domain.plan.service;
 import com.asdf148.javaproject.domain.plan.dto.MonthPlan;
 import com.asdf148.javaproject.domain.plan.dto.MonthPlans;
 import com.asdf148.javaproject.domain.plan.dto.PlanDetail;
+import com.asdf148.javaproject.domain.plan.dto.PlanDetails;
 import com.asdf148.javaproject.domain.plan.entity.Plan;
 import com.asdf148.javaproject.domain.plan.entity.PlanRepository;
 import com.asdf148.javaproject.domain.project.entity.Project;
@@ -72,7 +73,7 @@ public class PlanService {
                 .build();
     }
 
-    public List<PlanDetail> planDetail(ObjectId projectId, String date){
+    public PlanDetails planDetail(ObjectId projectId, String date){
 
         Project project = projectRepository.findById(projectId).orElseThrow();
         List<Plan> plans = project.getPlans();
@@ -91,6 +92,6 @@ public class PlanService {
             }
         }
 
-        return planDetails;
+        return PlanDetails.builder().planDetails(planDetails).build();
     }
 }
