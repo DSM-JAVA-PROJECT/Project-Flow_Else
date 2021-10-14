@@ -38,7 +38,7 @@ public class PlanController {
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<Object> detail(@RequestHeader Map<String, String> header, @RequestParam("id") ObjectId projectId, @RequestParam("date") LocalDate date){
+    public ResponseEntity<Object> detail(@RequestHeader Map<String, String> header, @RequestParam("id") ObjectId projectId, @RequestParam("date") String date){
         try{
             return new ResponseEntity<>(planService.planDetail(projectId, date), HttpStatus.OK);
         }catch (Exception e){
