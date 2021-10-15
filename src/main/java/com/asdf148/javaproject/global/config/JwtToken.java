@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
@@ -32,7 +33,7 @@ public class JwtToken {
                 .setExpiration(new Date(now.getTime() + Duration.ofMinutes(10).toMillis()))
                 .claim("id", user.getId().toString())
                 .claim("email", user.getEmail())
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(SignatureAlgorithm.HS256, Base64.getEncoder().encode(secretKey.getBytes()))
                 .compact();
 
     }
@@ -47,13 +48,13 @@ public class JwtToken {
                 .setExpiration(new Date(now.getTime() + Duration.ofDays(14).toMillis()))
                 .claim("id", user.getId().toString())
                 .claim("email", user.getEmail())
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(SignatureAlgorithm.HS256, Base64.getEncoder().encode(secretKey.getBytes()))
                 .compact();
     }
 
 
     public TokenContent decodeToken(String token) {
-        Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+        Jws<Claims> claims = Jwts.parser().setSigningKey(Base64.getEncoder().encode(secretKey.getBytes())).parseClaimsJws(token);
 
         System.out.println("decodeToken: " + claims.getBody().get("id").toString());
         System.out.println(new ObjectId(claims.getBody().get("id").toString()));
