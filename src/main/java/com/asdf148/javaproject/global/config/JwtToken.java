@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 
@@ -54,6 +55,7 @@ public class JwtToken {
 
 
     public TokenContent decodeToken(String token) {
+        System.out.println(Arrays.toString(Base64.getEncoder().encode(secretKey.getBytes())));
         Jws<Claims> claims = Jwts.parser().setSigningKey(Base64.getEncoder().encode(secretKey.getBytes())).parseClaimsJws(token);
 
         System.out.println("decodeToken: " + claims.getBody().get("id").toString());
