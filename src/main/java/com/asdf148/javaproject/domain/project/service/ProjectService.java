@@ -9,7 +9,7 @@ import com.asdf148.javaproject.domain.project.dto.ModifyProject;
 import com.asdf148.javaproject.domain.project.entity.Project;
 import com.asdf148.javaproject.domain.project.entity.ProjectRepository;
 import com.asdf148.javaproject.domain.project.entity.ProjectUser;
-import com.asdf148.javaproject.global.config.JwtToken;
+import com.asdf148.javaproject.global.config.JwtUtil;
 import com.asdf148.javaproject.global.dto.TokenContent;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -24,13 +24,13 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
 
-    private final JwtToken jwtToken;
+    private final JwtUtil jwtUtil;
     private final EmailService emailService;
     private final ChatRoomService chatRoomService;
     private final AuthService authService;
 
     public String createProject(String token, String imgUrl, CreateProject createProject) throws Exception {
-        TokenContent tokenContext = jwtToken.decodeToken(token);
+        TokenContent tokenContext = jwtUtil.decodeToken(token);
 
         Project project = Project.builder()
                 .projectName(createProject.getProjectName())
@@ -72,7 +72,7 @@ public class ProjectService {
     }
 
     public void initialPersonnel(String token, ObjectId projectId) {
-        TokenContent tokenContext = jwtToken.decodeToken(token);
+        TokenContent tokenContext = jwtUtil.decodeToken(token);
 
         Project project = projectRepository.findById(projectId).orElseThrow();
 
@@ -100,7 +100,7 @@ public class ProjectService {
     }
 
     public String modifyProject(String token, ObjectId id, String imgUrl, ModifyProject modifyProject) throws Exception{
-        TokenContent tokenContext = jwtToken.decodeToken(token);
+        TokenContent tokenContext = jwtUtil.decodeToken(token);
         //프로젝트인원에서 권한확인
         if(!projectRepository.findById(id).orElseThrow().getPm().equals(userRepository.findById(tokenContext.getId()))){
             throw new Exception("권한이 없습니다.");
@@ -132,7 +132,7 @@ public class ProjectService {
     }
 
     public String deleteProject(String token, ObjectId projectId) throws Exception{
-        TokenContent tokenContext = jwtToken.decodeToken(token);
+        TokenContent tokenContext = jwtUtil.decodeToken(token);
         //프로젝트인원에서 권한확인
         if(!projectRepository.findById(projectId).orElseThrow().getPm().equals(userRepository.findById(tokenContext.getId()))){
             throw new Exception("권한이 없습니다.");

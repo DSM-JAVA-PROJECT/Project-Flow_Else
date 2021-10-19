@@ -59,7 +59,6 @@ public class AuthController {
         String imgUrl = "";
 
         try{
-            System.out.println(modifyUser.getName());
             imgUrl = s3Upload.upload(modifyUser.getFile(), "profile");
         } catch (Exception e){
             System.out.println("AuthController modify S3 Upload: " + e.getMessage());

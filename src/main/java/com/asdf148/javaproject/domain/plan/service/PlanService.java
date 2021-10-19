@@ -8,7 +8,7 @@ import com.asdf148.javaproject.domain.plan.entity.Plan;
 import com.asdf148.javaproject.domain.plan.entity.PlanRepository;
 import com.asdf148.javaproject.domain.project.entity.Project;
 import com.asdf148.javaproject.domain.project.entity.ProjectRepository;
-import com.asdf148.javaproject.global.config.JwtToken;
+import com.asdf148.javaproject.global.config.JwtUtil;
 import com.asdf148.javaproject.global.dto.TokenContent;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -17,19 +17,18 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class PlanService {
-    private final JwtToken jwtToken;
+    private final JwtUtil jwtUtil;
     private final PlanRepository planRepository;
     private final ProjectRepository projectRepository;
 
     public String completePlan(String token, ObjectId planId){
         try{
-            TokenContent tokenContext = jwtToken.decodeToken(token);
+            TokenContent tokenContext = jwtUtil.decodeToken(token);
 
             Plan plan = planRepository.findById(planId).orElseThrow();
 

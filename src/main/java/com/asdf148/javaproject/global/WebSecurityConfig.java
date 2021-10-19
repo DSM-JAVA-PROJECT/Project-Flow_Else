@@ -37,16 +37,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
     @Override
     protected void configure(HttpSecurity http) throws Exception{
         http
-                .authorizeRequests()
-                .antMatchers("/member/**").authenticated()
-                .antMatchers("/admin/**").authenticated()
-                .antMatchers("/**").permitAll()
-                .and()
-                .cors().disable()
-                .csrf().disable()
-                .formLogin().disable()
-                .oauth2Login()
-                .userInfoEndpoint()
-                .userService(customOAuth2UserService);
+            .cors().disable()
+            .csrf().disable()
+            .formLogin().disable()
+            .authorizeRequests()
+            .anyRequest().authenticated()
+            .and()
+            .oauth2Login()
+            .userInfoEndpoint()
+            .userService(customOAuth2UserService);
     }
+
 }

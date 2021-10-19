@@ -6,7 +6,7 @@ import com.asdf148.javaproject.domain.auth.entity.UserRepository;
 import com.asdf148.javaproject.domain.project.dto.MyPageProjects;
 import com.asdf148.javaproject.domain.project.entity.Project;
 import com.asdf148.javaproject.domain.project.entity.ProjectRepository;
-import com.asdf148.javaproject.global.config.JwtToken;
+import com.asdf148.javaproject.global.config.JwtUtil;
 import com.asdf148.javaproject.global.dto.ReturnToken;
 import com.asdf148.javaproject.global.dto.TokenContent;
 import com.asdf148.javaproject.global.redisEntity.user.VerifyUserRedisRepository;
@@ -31,7 +31,7 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final JwtToken jwtToken;
+    private final JwtUtil jwtUtil;
 
     public String signUp(SignUpUser s_user) throws Exception {
 
@@ -67,13 +67,13 @@ public class AuthService {
             throw new Exception("비밀번호가 잘못되었습니다.");
         }
         return ReturnToken.builder()
-                .accessToken(jwtToken.createAccessToken(user))
-                .refreshToken(jwtToken.createRefreshToken(user))
+                .accessToken(jwtUtil.createAccessToken(user))
+                .refreshToken(jwtUtil.createRefreshToken(user))
                 .build();
     }
 
     public MyPageUser myPage(String token) throws Exception{
-        TokenContent tokenContext = jwtToken.decodeToken(token);
+        TokenContent tokenContext = jwtUtil.decodeToken(token);
 
         User user = userRepository.findById(tokenContext.getId()).orElseThrow();
 
@@ -96,7 +96,7 @@ public class AuthService {
     }
 
     public String modifyUser(String token, String imgUrl, ModifyUser modifyUser) throws Exception{
-        TokenContent tokenContext = jwtToken.decodeToken(token);
+        TokenContent tokenContext = jwtUtil.decodeToken(token);
 
         User user = User.builder().build();
 
@@ -127,7 +127,7 @@ public class AuthService {
     }
 
     public void addProject(String token, ObjectId projectId){
-        TokenContent tokenContext = jwtToken.decodeToken(token);
+        TokenContent tokenContext = jwtUtil.decodeToken(token);
 
         User user = userRepository.findById(tokenContext.getId()).orElseThrow();
         Project project = projectRepository.findById(projectId).orElseThrow();

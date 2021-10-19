@@ -9,7 +9,7 @@ import com.asdf148.javaproject.domain.plan.entity.Plan;
 import com.asdf148.javaproject.domain.plan.entity.PlanRepository;
 import com.asdf148.javaproject.domain.project.entity.Project;
 import com.asdf148.javaproject.domain.project.entity.ProjectRepository;
-import com.asdf148.javaproject.global.config.JwtToken;
+import com.asdf148.javaproject.global.config.JwtUtil;
 import com.asdf148.javaproject.global.dto.TokenContent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,10 +25,10 @@ public class MainService {
     private final ProjectRepository projectRepository;
     private final PlanRepository planRepository;
     private final UserRepository userRepository;
-    private final JwtToken jwtToken;
+    private final JwtUtil jwtUtil;
 
     public List<MainPageProject> mainPage(String token){
-        TokenContent tokenContext = jwtToken.decodeToken(token);
+        TokenContent tokenContext = jwtUtil.decodeToken(token);
         User user = userRepository.findById(tokenContext.getId())
                 .orElseThrow();
 

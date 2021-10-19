@@ -27,10 +27,10 @@ public class OAuthAttributes {
     public static OAuthAttributes of(String registrationId,
                                      String userNameAttributeName,
                                      Map<String, Object> attributes) {
-        return ofGoogle(userNameAttributeName, attributes);
+        return ofGithub(userNameAttributeName, attributes);
     }
 
-    private static OAuthAttributes ofGoogle(String userNameAttributeName,
+    private static OAuthAttributes ofGithub(String userNameAttributeName,
                                             Map<String, Object> attributes) {
         return OAuthAttributes.builder()
                 .name((String) attributes.get("name"))

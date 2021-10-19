@@ -15,7 +15,7 @@ import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
-public class JwtToken {
+public class JwtUtil {
     @Value("${auth.jwt.secret}")
     private String secretKey;
 
@@ -29,7 +29,7 @@ public class JwtToken {
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setIssuer("server")
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + Duration.ofMinutes(10).toMillis()))
+                .setExpiration(new Date(now.getTime() + Duration.ofDays(1).toMillis()))
                 .claim("id", user.getId().toString())
                 .claim("email", user.getEmail())
                 .signWith(SignatureAlgorithm.HS256, secretKey)
