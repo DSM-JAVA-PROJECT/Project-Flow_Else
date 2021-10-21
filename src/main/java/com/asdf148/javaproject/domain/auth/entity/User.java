@@ -37,4 +37,8 @@ public class User {
 
     @DBRef(lazy = true)
     private List<Project> projects;
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

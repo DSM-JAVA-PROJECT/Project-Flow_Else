@@ -95,6 +95,18 @@ public class AuthService {
         return myPageUser;
     }
 
+    public String ChangePassword(String token, String password) throws Exception{
+        TokenContent tokenContext = jwtUtil.decodeToken(token);
+
+        User user = userRepository.findById(tokenContext.getId()).orElseThrow();
+
+        user.setPassword(passwordEncoder.encode(password));
+
+        userRepository.save(user);
+
+        return "Changed";
+    }
+
     public String modifyImage(String token, String imgUrl) throws Exception{
         TokenContent tokenContext = jwtUtil.decodeToken(token);
 

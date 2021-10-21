@@ -60,6 +60,16 @@ public class AuthController {
         }
     }
 
+    @PatchMapping("/password")
+    public ResponseEntity<String> changePassword(@RequestHeader Map<String, String> header, String password){
+        try{
+            return new ResponseEntity<>(authService.ChangePassword(header.get("authorization").substring(7), password), HttpStatus.OK);
+        }catch (Exception e){
+            System.out.println("AuthController ChangePassword: " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PutMapping("/")
     public ResponseEntity<String> modify(@RequestHeader Map<String, String> header, MultipartFile file){
         String imgUrl = "";
