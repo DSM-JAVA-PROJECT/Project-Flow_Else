@@ -41,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
             .csrf().disable()
             .formLogin().disable()
             .authorizeRequests()
-                .antMatchers("/main").authenticated()
+                .antMatchers("/auth/oauth").authenticated()
             .and()
             .oauth2Login()
             .userInfoEndpoint()

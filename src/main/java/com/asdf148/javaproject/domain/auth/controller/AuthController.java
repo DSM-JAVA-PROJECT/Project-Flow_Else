@@ -20,6 +20,11 @@ public class AuthController {
     private final S3Upload s3Upload;
     private final AuthService authService;
 
+    @GetMapping("/oauth")
+    public String githubLogin(){
+        return "redirect:/main";
+    }
+
     @PostMapping("/join")
     public ResponseEntity<String> signUp(@Valid @RequestBody SignUpUser s_user){
         try{
