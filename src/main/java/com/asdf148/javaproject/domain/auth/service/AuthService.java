@@ -107,7 +107,7 @@ public class AuthService {
         return "Changed";
     }
 
-    public String modifyImage(String token, String imgUrl) throws Exception{
+    public String changeImage(String token, String imgUrl) throws Exception{
         TokenContent tokenContext = jwtUtil.decodeToken(token);
 
         User user = User.builder().build();
@@ -115,7 +115,7 @@ public class AuthService {
         try{
             user = userRepository.findByEmail(tokenContext.getEmail()).orElseThrow();
         }catch (Exception e){
-            System.out.println("AuthService modifyImage can't find user: " + e.getMessage());
+            System.out.println("AuthService changeImage can't find user: " + e.getMessage());
         }
 
         User updateUser = User.builder()
@@ -125,11 +125,11 @@ public class AuthService {
         try{
             userRepository.save(updateUser);
         }catch (Exception e){
-            System.out.println("AuthService modifyImage fail save: " + e.getMessage());
+            System.out.println("AuthService changeImage fail save: " + e.getMessage());
             throw new Exception(e.getMessage());
         }
 
-        return "Modified";
+        return "Changed";
     }
 
     public void addProject(String token, ObjectId projectId){

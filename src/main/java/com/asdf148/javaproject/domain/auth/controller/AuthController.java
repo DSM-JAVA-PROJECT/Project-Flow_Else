@@ -1,6 +1,5 @@
 package com.asdf148.javaproject.domain.auth.controller;
 
-import com.asdf148.javaproject.domain.auth.dto.ModifyUser;
 import com.asdf148.javaproject.domain.auth.dto.SignInUser;
 import com.asdf148.javaproject.domain.auth.dto.SignUpUser;
 import com.asdf148.javaproject.domain.auth.service.AuthService;
@@ -70,8 +69,8 @@ public class AuthController {
         }
     }
 
-    @PutMapping("/")
-    public ResponseEntity<String> modify(@RequestHeader Map<String, String> header, MultipartFile file){
+    @PatchMapping("/image")
+    public ResponseEntity<String> ChangeImage(@RequestHeader Map<String, String> header, MultipartFile file){
         String imgUrl = "";
 
         try{
@@ -82,7 +81,7 @@ public class AuthController {
         }
 
         try{
-            return new ResponseEntity<>(authService.modifyImage(header.get("authorization").substring(7), imgUrl), HttpStatus.OK);
+            return new ResponseEntity<>(authService.changeImage(header.get("authorization").substring(7), imgUrl), HttpStatus.OK);
         }catch (Exception e){
             System.out.println("AuthController modify: " + e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
