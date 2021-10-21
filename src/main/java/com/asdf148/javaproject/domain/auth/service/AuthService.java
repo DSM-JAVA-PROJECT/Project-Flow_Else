@@ -95,7 +95,7 @@ public class AuthService {
         return myPageUser;
     }
 
-    public String modifyUser(String token, String imgUrl, ModifyUser modifyUser) throws Exception{
+    public String modifyImage(String token, String imgUrl) throws Exception{
         TokenContent tokenContext = jwtUtil.decodeToken(token);
 
         User user = User.builder().build();
@@ -103,23 +103,17 @@ public class AuthService {
         try{
             user = userRepository.findByEmail(tokenContext.getEmail()).orElseThrow();
         }catch (Exception e){
-            System.out.println("AuthService modifyUser can't find user: " + e.getMessage());
+            System.out.println("AuthService modifyImage can't find user: " + e.getMessage());
         }
 
         User updateUser = User.builder()
-                .id(user.getId())
-                .name(modifyUser.getName())
-                .email(user.getEmail())
-                .password(passwordEncoder.encode(modifyUser.getPassword()))
-                .phoneNumber(modifyUser.getPhone_number())
                 .profileImage(imgUrl)
-                .projects(user.getProjects())
                 .build();
 
         try{
             userRepository.save(updateUser);
         }catch (Exception e){
-            System.out.println("AuthService modifyUser fail save: " + e.getMessage());
+            System.out.println("AuthService modifyImage fail save: " + e.getMessage());
             throw new Exception(e.getMessage());
         }
 

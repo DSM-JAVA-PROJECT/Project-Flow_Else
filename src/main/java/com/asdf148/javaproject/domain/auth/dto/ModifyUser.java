@@ -17,5 +17,5 @@ public class ModifyUser {
     @Size(min = 8, max = 16, message = "8자 이상 16자 이하여야 합니다.")
     private String password;
 
-    private MultipartFile File;
+
 }
