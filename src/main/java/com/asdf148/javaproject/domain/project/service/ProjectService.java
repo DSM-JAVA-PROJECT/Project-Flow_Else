@@ -102,7 +102,7 @@ public class ProjectService {
     public String modifyProject(String token, ObjectId id, String imgUrl, ModifyProject modifyProject) throws Exception{
         TokenContent tokenContext = jwtUtil.decodeToken(token);
         //프로젝트인원에서 권한확인
-        if(!projectRepository.findById(id).orElseThrow().getPm().equals(userRepository.findById(tokenContext.getId()))){
+        if(!(projectRepository.findById(id).orElseThrow().getPm().getId().toString().equals(tokenContext.getId().toString()))){
             throw new Exception("권한이 없습니다.");
         }
 
@@ -133,13 +133,15 @@ public class ProjectService {
 
     public String deleteProject(String token, ObjectId projectId) throws Exception{
         TokenContent tokenContext = jwtUtil.decodeToken(token);
+
+        Project project = projectRepository.findById(projectId).orElseThrow();
+
         //프로젝트인원에서 권한확인
-        if(!projectRepository.findById(projectId).orElseThrow().getPm().equals(userRepository.findById(tokenContext.getId()))){
+        if(!(project.getPm().getId().toString().equals(tokenContext.getId().toString()))){
             throw new Exception("권한이 없습니다.");
         }
-
         try{
-            projectRepository.delete(projectRepository.findById(projectId).orElseThrow());
+            projectRepository.delete(project);
         }catch (Exception e){
             return e.getMessage();
         }
