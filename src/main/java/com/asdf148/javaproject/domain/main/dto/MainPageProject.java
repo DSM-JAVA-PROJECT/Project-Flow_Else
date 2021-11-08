@@ -15,6 +15,8 @@ public class MainPageProject {
 
     private String name;
 
+    private String logoImage;
+
     private LocalDate startDate;
 
     private LocalDate endDate;

@@ -67,6 +67,7 @@ public class MainService {
                  mainPageProject = MainPageProject.builder()
                         .id(project.getId().toString())
                         .name(project.getProjectName())
+                        .logoImage(project.getLogoImage())
                         .startDate(project.getStartDate())
                         .endDate(project.getEndDate())
                         .personalProgress(personalProgress)

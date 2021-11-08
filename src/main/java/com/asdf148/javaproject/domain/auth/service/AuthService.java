@@ -83,7 +83,7 @@ public class AuthService {
                 .projects(user.getProjects().stream().filter( project -> project.getEndDate().compareTo(LocalDate.now()) < 0 ).collect(Collectors.toList()).stream().map(
                         project -> MyPageProjects.builder()
                                 .projectName(project.getProjectName())
-                                .LogoImage(project.getLogoImage())
+                                .logoImage(project.getLogoImage())
                                 .isFinished(project.isFinished())
                                 .startDate(project.getStartDate())
                                 .endDate(project.getEndDate())
