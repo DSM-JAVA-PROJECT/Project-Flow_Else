@@ -66,4 +66,8 @@ public class Project {
         this.pm = pm;
         this.plans = new ArrayList<>();
     }
+
+    public void setFinished (){
+        isFinished = true;
+    }
 }

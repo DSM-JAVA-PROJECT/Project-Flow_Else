@@ -22,8 +22,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MainService {
 
-    private final ProjectRepository projectRepository;
-    private final PlanRepository planRepository;
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
@@ -40,8 +38,6 @@ public class MainService {
         for (Project project: projects) {
             plans.add(project.getPlans());
         }
-
-
 
         for (Project project: projects) {
             MainPageProject mainPageProject = MainPageProject.builder().build();
@@ -69,6 +65,7 @@ public class MainService {
                 }
 
                  mainPageProject = MainPageProject.builder()
+                        .id(project.getId().toString())
                         .name(project.getProjectName())
                         .startDate(project.getStartDate())
                         .endDate(project.getEndDate())
@@ -89,7 +86,6 @@ public class MainService {
                         ).collect(Collectors.toList()))
                         .build();
             }
-
             mainPageProjects.add(mainPageProject);
         }
 

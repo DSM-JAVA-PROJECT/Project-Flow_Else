@@ -146,110 +146,20 @@ public class ProjectService {
 
         return "Success";
     }
-//
-//    public String addSchedule(String token, String projectId, CreateSchedule createSchedule){
-//        try{
-//            TokenContent tokenContext = jwtToken.decodeToken(token);
-//
-//            ProjectSchedule projectSchedule = projectScheduleRepository.save(
-//                    new ProjectSchedule(
-//                            null,
-//                            createSchedule.getContent(),
-//                            createSchedule.getStatus(),
-//                            projectRepository.findById(Long.valueOf(projectId)).orElseThrow(),
-//                            createSchedule.getStarted_at(),
-//                            createSchedule.getEnded_at(),
-//                            null
-//                    )
-//            );
-//
-//            joinSchedule(token, String.valueOf(projectSchedule.getId()));
-//
-//            return "success";
-//        }catch(Exception e){
-//            new Exception(e.getMessage());
-//            return "error";
-//        }
-//    }
-//
-//    public String modifySchedule(String token, String scheduleId, ModifySchedule modifySchedule){
-//        try {
-//            TokenContent tokenContext = jwtToken.decodeToken(token);
-//
-//            ProjectSchedule projectSchedule = projectScheduleRepository.findById(Long.valueOf(scheduleId)).orElseThrow();
-//
-//            projectScheduleRepository.save(
-//                    new ProjectSchedule(
-//                            projectSchedule.getId(),
-//                            modifySchedule.getContent(),
-//                            modifySchedule.getStatus(),
-//                            projectSchedule.getProject(),
-//                            modifySchedule.getStarted_at(),
-//                            modifySchedule.getEnded_at(),
-//                            projectSchedule.getPersonnels()
-//                    )
-//            );
-//
-//            return "modified";
-//
-//        }catch(Exception e){
-//            new Exception(e.getMessage());
-//            return "error";
-//        }
-//    }
-//
-//    public String deleteSchedule(String token, String scheduleId){
-//        try{
-//            TokenContent tokenContext = jwtToken.decodeToken(token);
-//
-//            projectScheduleRepository.delete(
-//                    projectScheduleRepository.findById(Long.valueOf(scheduleId)).orElseThrow()
-//            );
-//            return "deleted";
-//        }catch (Exception e){
-//            new Exception(e.getMessage());
-//            return "error";
-//        }
-//    }
-//
-//
-//    public void joinSchedule(String token, String scheduleId){
-//        try{
-//            TokenContent tokenContext = jwtToken.decodeToken(token);
-//
-//            schedulePersonnelRepository.save(
-//                    new SchedulePersonnel(
-//                            null,
-//                            projectScheduleRepository.findById(Long.valueOf(scheduleId)).orElseThrow(),
-//                            userRepository.findById(tokenContext.getId()).orElseThrow()
-//                    )
-//            );
-//        }catch (Exception e){
-//            new Exception(e.getMessage());
-//        }
-//    }
-//
-//    public void leaveSchedule(String token, String scheduleId){
-//        try{
-//            TokenContent tokenContext = jwtToken.decodeToken(token);
-//
-//            schedulePersonnelRepository.delete(schedulePersonnelRepository.findById(Long.valueOf(scheduleId)).orElseThrow());
-//        }catch (Exception e){
-//            new Exception(e.getMessage());
-//        }
-//    }
-//
-//    public void changingRoles(String token, String role) throws Exception{
-//        try{
-//            TokenContent tokenContext = jwtToken.decodeToken(token);
-//
-//            ProjectPersonnel projectPersonnel = projectPersonnelRepository.findByUserId(tokenContext.getId()).orElseThrow();
-//
-//            ProjectPersonnel modifyProjectPersonnel = new ProjectPersonnel(projectPersonnel.getId(), projectPersonnel.getProject(), projectPersonnel.getUser(), projectPersonnel.getPermission(), role);
-//
-//            projectPersonnelRepository.save(modifyProjectPersonnel);
-//        }catch (Exception e){
-//            new Exception(e.getMessage());
-//        }
-//    }
+
+    public String closeProject(String token, ObjectId projectId) throws Exception{
+        TokenContent tokenContext = jwtUtil.decodeToken(token);
+
+        Project project = projectRepository.findById(projectId).orElseThrow();
+
+        if(!(project.getPm().getId().toString().equals(tokenContext.getId().toString()))){
+            throw new Exception("권한이 없습니다.");
+        }
+
+        project.setFinished();
+
+        projectRepository.save(project);
+
+        return "Project closed";
+    }
 }

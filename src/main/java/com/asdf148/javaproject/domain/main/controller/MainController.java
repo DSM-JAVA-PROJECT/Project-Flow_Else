@@ -1,6 +1,5 @@
 package com.asdf148.javaproject.domain.main.controller;
 
-import com.asdf148.javaproject.domain.main.dto.MainPageResponse;
 import com.asdf148.javaproject.domain.main.service.MainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

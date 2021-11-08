@@ -80,4 +80,14 @@ public class ProjectController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PatchMapping("close/{id}")
+    public ResponseEntity<String> closeProject(@RequestHeader Map<String, String> header, @PathVariable("id") ObjectId id){
+        try{
+            return new ResponseEntity<>(projectService.closeProject(header.get("authorization").substring(7), id), HttpStatus.OK);
+        } catch (Exception e){
+            System.out.println("ProjectController closeProject: " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
