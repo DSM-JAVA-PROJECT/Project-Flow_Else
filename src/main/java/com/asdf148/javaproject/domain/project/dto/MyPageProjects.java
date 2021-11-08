@@ -10,6 +10,8 @@ import java.time.LocalDate;
 public class MyPageProjects {
     private String projectName;
 
+    private String LogoImage;
+
     private boolean isFinished;
 
     private LocalDate startDate;
