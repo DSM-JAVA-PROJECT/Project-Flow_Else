@@ -2,6 +2,7 @@ package com.asdf148.javaproject.domain.plan.entity;
 
 import lombok.*;
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -27,7 +28,11 @@ public class Plan {
     @NotNull
     private LocalDate startDate;
 
+    @NotNull
     private LocalDate finishDate;
+
+    @CreatedDate
+    private LocalDate createdAt;
 
     private List<PlanUser> planUsers;
 
