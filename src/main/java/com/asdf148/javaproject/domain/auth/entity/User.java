@@ -41,4 +41,8 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public void setProfileImage(String imageUrl){
+        this.profileImage = imageUrl;
+    }
 }

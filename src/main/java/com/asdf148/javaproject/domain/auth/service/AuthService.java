@@ -119,12 +119,10 @@ public class AuthService {
             System.out.println("AuthService changeImage can't find user: " + e.getMessage());
         }
 
-        User updateUser = User.builder()
-                .profileImage(imgUrl)
-                .build();
+        user.setProfileImage(imgUrl);
 
         try{
-            userRepository.save(updateUser);
+            userRepository.save(user);
         }catch (Exception e){
             System.out.println("AuthService changeImage fail save: " + e.getMessage());
             throw new Exception(e.getMessage());
