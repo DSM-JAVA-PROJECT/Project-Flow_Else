@@ -80,6 +80,8 @@ public class AuthController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
+        System.out.println("controller: " + imgUrl);
+
         try{
             return new ResponseEntity<>(authService.changeImage(header.get("authorization").substring(7), imgUrl), HttpStatus.OK);
         }catch (Exception e){
