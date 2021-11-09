@@ -61,6 +61,3 @@ jobs:
 
       - name: Upload to DockerHub
         run: docker push asdf1643/java-project
-
-#      - name: Code Deploy
-#        run: aws deploy create-deployment --application-name JavaProject --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name JavaProjectDeployGroup --s3-location bucket=java-project2215,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
