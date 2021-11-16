@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -21,8 +23,8 @@ public class AuthController {
     private final AuthService authService;
 
     @GetMapping("/oauth")
-    public String githubLogin(){
-        return "redirect:/main";
+    public void githubLogin(HttpServletResponse response) throws IOException {
+        response.sendRedirect("http://18.210.203.222:8080/main");
     }
 
     @PostMapping("/join")
