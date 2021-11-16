@@ -12,6 +12,7 @@ import com.asdf148.javaproject.global.dto.TokenContent;
 import com.asdf148.javaproject.global.redisEntity.user.VerifyUserRedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,12 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     private final JwtUtil jwtUtil;
+
+    @Value("${oauth2.authorizedRedirectUris}")
+    private String oauthRedirect;
+
+    @Value("${spring.data.mongodb.uri}")
+    private String mongoDBURI;
 
     public String signUp(SignUpUser s_user) throws Exception {
 
@@ -57,6 +64,10 @@ public class AuthService {
     }
 
     public ReturnToken signIn(SignInUser s_user) throws Exception {
+
+        System.out.println("mongoDB: " + mongoDBURI);
+        System.out.println("oauth: " + oauthRedirect);
+
         System.out.println("before findByEmail");
         User user = userRepository.findByEmail(s_user.getEmail()).orElseThrow();
         System.out.println("after findByEmail");
