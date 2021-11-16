@@ -25,5 +25,7 @@ public class MainPageProject {
 
     private int projectProgress;
 
+    private long RemainingDays;
+
     private List<MainPagePlan> mainPagePlans;
 }

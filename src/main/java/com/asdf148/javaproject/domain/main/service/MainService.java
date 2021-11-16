@@ -14,6 +14,7 @@ import com.asdf148.javaproject.global.dto.TokenContent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,6 +53,8 @@ public class MainService {
                 int personalProgress = 0;
                 int projectProgress = 0;
 
+                long remaingDays = ChronoUnit.DAYS.between(project.getStartDate(), project.getEndDate());
+
                 try{
                     personalProgress = personalFinish / personalEntire;
                 }catch (ArithmeticException e){
@@ -72,6 +75,7 @@ public class MainService {
                         .endDate(project.getEndDate())
                         .personalProgress(personalProgress)
                         .projectProgress(projectProgress)
+                        .RemainingDays(remaingDays)
                         .mainPagePlans(planList.stream().map(
                                 plan -> MainPagePlan.builder()
                                         .name(plan.getName())
