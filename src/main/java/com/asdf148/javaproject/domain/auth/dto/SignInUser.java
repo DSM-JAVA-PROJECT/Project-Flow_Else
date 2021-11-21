@@ -10,4 +10,6 @@ public class SignInUser {
     private String email;
 
     private String password;
+
+    private String deviceToken;
 }

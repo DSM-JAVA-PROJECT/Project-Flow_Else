@@ -77,6 +77,10 @@ public class AuthService {
         if (!passwordEncoder.matches(s_user.getPassword(), user.getPassword())) {
             throw new Exception("비밀번호가 잘못되었습니다.");
         }
+
+        user.setDeviceToken(s_user.getDeviceToken());
+        userRepository.save(user);
+
         return ReturnToken.builder()
                 .accessToken(jwtUtil.createAccessToken(user))
                 .refreshToken(jwtUtil.createRefreshToken(user))

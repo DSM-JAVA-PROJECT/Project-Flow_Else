@@ -32,6 +32,8 @@ public class User {
 
     private String profileImage;
 
+    private String deviceToken;
+
     @NotBlank
     private String phoneNumber;
 
@@ -44,5 +46,9 @@ public class User {
 
     public void setProfileImage(String imageUrl){
         this.profileImage = imageUrl;
+    }
+
+    public void setDeviceToken(String deviceToken){
+        this.deviceToken = deviceToken;
     }
 }
