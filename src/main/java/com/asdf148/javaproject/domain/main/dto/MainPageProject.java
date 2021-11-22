@@ -21,11 +21,11 @@ public class MainPageProject {
 
     private LocalDate endDate;
 
-    private int personalProgress;
+    private String personalProgress;
 
-    private int projectProgress;
+    private String projectProgress;
 
-    private long RemainingDays;
+    private String RemainingDays;
 
     private List<MainPagePlan> mainPagePlans;
 }

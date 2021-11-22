@@ -73,9 +73,9 @@ public class MainService {
                         .logoImage(project.getLogoImage())
                         .startDate(project.getStartDate())
                         .endDate(project.getEndDate())
-                        .personalProgress(personalProgress)
-                        .projectProgress(projectProgress)
-                        .RemainingDays(remaingDays)
+                        .personalProgress(""+personalProgress+"%")
+                        .projectProgress(""+projectProgress+"%")
+                        .RemainingDays("D-"+remaingDays)
                         .mainPagePlans(planList.stream().map(
                                 plan -> MainPagePlan.builder()
                                         .name(plan.getName())
