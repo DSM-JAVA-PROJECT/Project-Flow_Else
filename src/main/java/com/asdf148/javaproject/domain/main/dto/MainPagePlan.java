@@ -15,7 +15,5 @@ public class MainPagePlan {
 
     private LocalDate endDate;
 
-    private boolean isFinish;
-
     private List<MainPageUser> mainPageUsers;
 }

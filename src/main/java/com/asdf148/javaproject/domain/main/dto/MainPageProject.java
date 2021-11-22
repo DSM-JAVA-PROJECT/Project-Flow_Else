@@ -25,7 +25,11 @@ public class MainPageProject {
 
     private String projectProgress;
 
-    private String RemainingDays;
+    private String remainingDays;
 
-    private List<MainPagePlan> mainPagePlans;
+    private List<MainPagePlan> before;
+
+    private List<MainPagePlan> ongoing;
+
+    private List<MainPagePlan> after;
 }
