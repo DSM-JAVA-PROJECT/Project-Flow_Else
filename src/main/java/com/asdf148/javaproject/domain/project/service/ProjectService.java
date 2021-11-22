@@ -68,7 +68,7 @@ public class ProjectService {
             }
         }
 
-        return "Success";
+        return savedProject.getId().toString();
     }
 
     public void initialPersonnel(String token, ObjectId projectId) {
