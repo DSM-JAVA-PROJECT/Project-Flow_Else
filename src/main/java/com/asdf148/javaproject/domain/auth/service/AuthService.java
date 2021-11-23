@@ -146,11 +146,10 @@ public class AuthService {
         return "Changed";
     }
 
-    public void addProject(String token, ObjectId projectId){
+    public void addProject(String token, Project project){
         TokenContent tokenContext = jwtUtil.decodeToken(token);
 
-        User user = userRepository.findById(tokenContext.getId()).orElseThrow();
-        Project project = projectRepository.findById(projectId).orElseThrow();
+        User user = userRepository.findByEmail(tokenContext.getEmail()).orElseThrow();
 
         User updateUser = User.builder()
                 .id(user.getId())

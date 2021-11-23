@@ -44,18 +44,18 @@ public class ProjectService {
         Project savedProject = projectRepository.save(project);
 
         //프로젝트 만든 사람 추가
-        initialPersonnel(token, savedProject.getId());
+        savedProject = initialPersonnel(token, savedProject);
 
         try {
             //프롲젝트 기본 채팅방 생성
-            chatRoomService.initialChatRoom(token, savedProject.getId());
+            chatRoomService.initialChatRoom(token, savedProject);
         }catch (Exception e){
             System.out.println("initialCheatRoom Fail: " + e.getMessage());
             return e.getMessage();
         }
 
         //유저에 프로젝트 추가
-        authService.addProject(token, savedProject.getId());
+        authService.addProject(token, savedProject);
 
         for(String email: createProject.getEmails()) {
             try{
@@ -71,10 +71,8 @@ public class ProjectService {
         return savedProject.getId().toString();
     }
 
-    public void initialPersonnel(String token, ObjectId projectId) {
+    public Project initialPersonnel(String token, Project project) {
         TokenContent tokenContext = jwtUtil.decodeToken(token);
-
-        Project project = projectRepository.findById(projectId).orElseThrow();
 
         ProjectUser projectUser = ProjectUser.builder()
                 .user(userRepository.findByEmail(tokenContext.getEmail()).orElseThrow())
@@ -82,7 +80,7 @@ public class ProjectService {
 
         project.getProjectUsers().add(projectUser);
 
-        projectRepository.save(project);
+        return projectRepository.save(project);
     }
 
     public void addPersonnel(String email, ObjectId projectId){

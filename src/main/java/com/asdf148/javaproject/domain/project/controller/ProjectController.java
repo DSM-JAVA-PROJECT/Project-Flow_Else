@@ -23,13 +23,12 @@ public class ProjectController {
     public ResponseEntity<String> createProject(@RequestHeader Map<String, String> header, @ModelAttribute("createProject") CreateProject createProject){
         String imgUrl = "";
 
-//        try{
-//            System.out.println(createProject.getProjectName());
-//            imgUrl = s3Upload.upload(createProject.getFile(), "project");
-//        } catch (Exception e){
-//            System.out.println("S3 Upload: " + e.getMessage());
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//        }
+        try{
+            imgUrl = s3Upload.upload(createProject.getFile(), "project");
+        } catch (Exception e){
+            System.out.println("S3 Upload: " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 
         try{
             return new ResponseEntity<>(

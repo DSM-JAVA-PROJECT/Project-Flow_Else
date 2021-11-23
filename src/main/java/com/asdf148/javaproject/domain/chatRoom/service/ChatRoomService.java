@@ -38,10 +38,8 @@ public class ChatRoomService {
                 .collect(Collectors.toList()));
     }
 
-    public void initialChatRoom(String token, ObjectId projectId) {
+    public void initialChatRoom(String token, Project project) {
         TokenContent tokenContext = jwtUtil.decodeToken(token);
-
-        Project project = projectRepository.findById(projectId).orElseThrow();
 
         ChatRoom chatRoom = ChatRoom.builder()
                 .name(project.getProjectName())

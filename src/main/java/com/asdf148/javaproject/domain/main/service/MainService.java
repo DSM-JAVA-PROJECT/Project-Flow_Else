@@ -41,13 +41,20 @@ public class MainService {
 
         List<MainPageProject> mainPageProjects = new ArrayList<MainPageProject>();
 
+        System.out.println("test1");
+
         for (Project project: projects) {
             for(ChatRoom chatRoom: project.getChatRooms()){
                 plans.add(chatRoom.getPlans());
             }
         }
 
+        System.out.println("test2");
+
+        System.out.println(projects);
+
         for (Project project: projects) {
+            System.out.println("test3");
             MainPageProject mainPageProject = MainPageProject.builder().build();
 
             List<MainPagePlan> before = new ArrayList<>();
