@@ -32,8 +32,10 @@ public class ProjectController {
         }
 
         try{
-            projectService.createProject(header.get("authorization").substring(7), imgUrl, createProject);
-            return new ResponseEntity<>("Success", HttpStatus.CREATED);
+            return new ResponseEntity<>(
+                    projectService.createProject(header.get("authorization").substring(7), imgUrl, createProject),
+                    HttpStatus.CREATED
+            );
         }
         catch(Exception e){
             System.out.println("projectController /: " + e.getMessage());

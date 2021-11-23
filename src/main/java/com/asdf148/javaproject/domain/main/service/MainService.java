@@ -34,24 +34,18 @@ public class MainService {
 
         System.out.println(tokenContext.getId());
 
-        User user = userRepository.findById(tokenContext.getId()).orElseThrow();
-
-        System.out.println("test1");
+        User user = userRepository.findByEmail(tokenContext.getEmail()).orElseThrow();
 
         List<Project> projects = user.getProjects();
         List<List<Plan>> plans = new ArrayList<List<Plan>>();
 
         List<MainPageProject> mainPageProjects = new ArrayList<MainPageProject>();
 
-        System.out.println("test2");
-
         for (Project project: projects) {
             for(ChatRoom chatRoom: project.getChatRooms()){
                 plans.add(chatRoom.getPlans());
             }
         }
-
-        System.out.println("test3");
 
         for (Project project: projects) {
             MainPageProject mainPageProject = MainPageProject.builder().build();
@@ -63,47 +57,19 @@ public class MainService {
             LocalDate current = LocalDate.now();
 
             for (List<Plan> planList: plans){
+
                 for( Plan plan: planList){
                     if(current.isBefore(plan.getStartDate())){
-                        before.add(MainPagePlan.builder()
-                                .name(plan.getName())
-                                .startDate(plan.getStartDate())
-                                .endDate(plan.getEndDate())
-                                .mainPageUsers(plan.getPlanUsers().stream().map(
-                                        planUser -> MainPageUser.builder()
-                                                .image(planUser.getUser().getProfileImage())
-                                                .build()
-                                ).collect(Collectors.toList()))
-                                .build());
+                        before.add(makePlan(plan));
                     }
                     else if(current.isAfter(plan.getStartDate()) && current.isBefore(plan.getEndDate()) && plan.getFinishDate() == null){
-                        ongoing.add(MainPagePlan.builder()
-                                .name(plan.getName())
-                                .startDate(plan.getStartDate())
-                                .endDate(plan.getEndDate())
-                                .mainPageUsers(plan.getPlanUsers().stream().map(
-                                        planUser -> MainPageUser.builder()
-                                                .image(planUser.getUser().getProfileImage())
-                                                .build()
-                                ).collect(Collectors.toList()))
-                                .build());
+                        ongoing.add(makePlan(plan));
                     }
                     else if(current.isEqual(plan.getFinishDate()) || current.isAfter(plan.getFinishDate())){
-                        after.add(MainPagePlan.builder()
-                                .name(plan.getName())
-                                .startDate(plan.getStartDate())
-                                .endDate(plan.getEndDate())
-                                .mainPageUsers(plan.getPlanUsers().stream().map(
-                                        planUser -> MainPageUser.builder()
-                                                .image(planUser.getUser().getProfileImage())
-                                                .build()
-                                ).collect(Collectors.toList()))
-                                .build());
+                        after.add(makePlan(plan));
                     }
                 }
             }
-
-            System.out.println("test4");
 
             for (List<Plan> planList: plans){
 
@@ -146,5 +112,18 @@ public class MainService {
             mainPageProjects.add(mainPageProject);
         }
         return mainPageProjects;
+    }
+
+    public MainPagePlan makePlan(Plan plan){
+        return MainPagePlan.builder()
+                .name(plan.getName())
+                .startDate(plan.getStartDate())
+                .endDate(plan.getEndDate())
+                .mainPageUsers(plan.getPlanUsers().stream().map(
+                        planUser -> MainPageUser.builder()
+                                .image(planUser.getUser().getProfileImage())
+                                .build()
+                ).collect(Collectors.toList()))
+                .build();
     }
 }
