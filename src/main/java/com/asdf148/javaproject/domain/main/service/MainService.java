@@ -2,6 +2,7 @@ package com.asdf148.javaproject.domain.main.service;
 
 import com.asdf148.javaproject.domain.auth.entity.User;
 import com.asdf148.javaproject.domain.auth.entity.UserRepository;
+import com.asdf148.javaproject.domain.chatRoom.entity.ChatRoom;
 import com.asdf148.javaproject.domain.main.dto.MainPagePlan;
 import com.asdf148.javaproject.domain.main.dto.MainPageProject;
 import com.asdf148.javaproject.domain.main.dto.MainPageUser;
@@ -28,18 +29,29 @@ public class MainService {
     private final JwtUtil jwtUtil;
 
     public List<MainPageProject> mainPage(String token){
+
         TokenContent tokenContext = jwtUtil.decodeToken(token);
-        User user = userRepository.findById(tokenContext.getId())
-                .orElseThrow();
+
+        System.out.println(tokenContext.getId());
+
+        User user = userRepository.findById(tokenContext.getId()).orElseThrow();
+
+        System.out.println("test1");
 
         List<Project> projects = user.getProjects();
         List<List<Plan>> plans = new ArrayList<List<Plan>>();
 
         List<MainPageProject> mainPageProjects = new ArrayList<MainPageProject>();
 
+        System.out.println("test2");
+
         for (Project project: projects) {
-            plans.add(project.getPlans());
+            for(ChatRoom chatRoom: project.getChatRooms()){
+                plans.add(chatRoom.getPlans());
+            }
         }
+
+        System.out.println("test3");
 
         for (Project project: projects) {
             MainPageProject mainPageProject = MainPageProject.builder().build();
@@ -90,6 +102,8 @@ public class MainService {
                     }
                 }
             }
+
+            System.out.println("test4");
 
             for (List<Plan> planList: plans){
 

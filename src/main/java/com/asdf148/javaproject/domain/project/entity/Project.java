@@ -44,8 +44,6 @@ public class Project {
 
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
-    private List<Plan> plans = new ArrayList<>();
-
     private boolean isFinished;
 
     @NotBlank
@@ -64,7 +62,6 @@ public class Project {
         this.projectUsers = new ArrayList<>();
         this.isFinished = false;
         this.pm = pm;
-        this.plans = new ArrayList<>();
     }
 
     public void setFinished (){

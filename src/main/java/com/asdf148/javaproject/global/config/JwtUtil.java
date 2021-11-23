@@ -55,11 +55,7 @@ public class JwtUtil {
 
 
     public TokenContent decodeToken(String token) {
-        System.out.println(Arrays.toString(Base64.getEncoder().encode(secretKey.getBytes())));
         Jws<Claims> claims = Jwts.parser().setSigningKey(Base64.getEncoder().encode(secretKey.getBytes())).parseClaimsJws(token);
-
-        System.out.println("decodeToken: " + claims.getBody().get("id").toString());
-        System.out.println(new ObjectId(claims.getBody().get("id").toString()));
         TokenContent tokenContent = new TokenContent(new ObjectId(claims.getBody().get("id").toString()), String.valueOf(claims.getBody().get("email")));
 
         return tokenContent;

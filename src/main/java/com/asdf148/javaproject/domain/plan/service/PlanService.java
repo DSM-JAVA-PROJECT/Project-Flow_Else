@@ -1,5 +1,6 @@
 package com.asdf148.javaproject.domain.plan.service;
 
+import com.asdf148.javaproject.domain.chatRoom.entity.ChatRoom;
 import com.asdf148.javaproject.domain.plan.dto.MonthPlan;
 import com.asdf148.javaproject.domain.plan.dto.MonthPlans;
 import com.asdf148.javaproject.domain.plan.dto.PlanDetail;
@@ -46,7 +47,12 @@ public class PlanService {
     public MonthPlans monthPlans(ObjectId projectId, int year, int month){
 
         Project project = projectRepository.findById(projectId).orElseThrow();
-        List<Plan> plans = project.getPlans();
+        List<Plan> plans = new ArrayList<>();
+
+        for(ChatRoom chatRoom :project.getChatRooms()){
+            plans.addAll(chatRoom.getPlans());
+        }
+
         List<MonthPlan> monthPlanList = new ArrayList<MonthPlan>();
 
         for (Plan plan: plans){
@@ -75,7 +81,11 @@ public class PlanService {
     public PlanDetails planDetail(ObjectId projectId, String date){
 
         Project project = projectRepository.findById(projectId).orElseThrow();
-        List<Plan> plans = project.getPlans();
+        List<Plan> plans = new ArrayList<>();
+
+        for(ChatRoom chatRoom :project.getChatRooms()){
+            plans.addAll(chatRoom.getPlans());
+        }
         List<PlanDetail> planDetails = new ArrayList<PlanDetail>();
 
         LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
