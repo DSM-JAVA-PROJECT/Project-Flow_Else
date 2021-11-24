@@ -7,9 +7,7 @@ import com.asdf148.javaproject.domain.main.dto.MainPagePlan;
 import com.asdf148.javaproject.domain.main.dto.MainPageProject;
 import com.asdf148.javaproject.domain.main.dto.MainPageUser;
 import com.asdf148.javaproject.domain.plan.entity.Plan;
-import com.asdf148.javaproject.domain.plan.entity.PlanRepository;
 import com.asdf148.javaproject.domain.project.entity.Project;
-import com.asdf148.javaproject.domain.project.entity.ProjectRepository;
 import com.asdf148.javaproject.global.config.JwtUtil;
 import com.asdf148.javaproject.global.dto.TokenContent;
 import lombok.RequiredArgsConstructor;
@@ -41,20 +39,13 @@ public class MainService {
 
         List<MainPageProject> mainPageProjects = new ArrayList<MainPageProject>();
 
-        System.out.println("test1");
-
         for (Project project: projects) {
             for(ChatRoom chatRoom: project.getChatRooms()){
                 plans.add(chatRoom.getPlans());
             }
         }
 
-        System.out.println("test2");
-
-        System.out.println(projects);
-
         for (Project project: projects) {
-            System.out.println("test3");
             MainPageProject mainPageProject = MainPageProject.builder().build();
 
             List<MainPagePlan> before = new ArrayList<>();
@@ -64,15 +55,17 @@ public class MainService {
             LocalDate current = LocalDate.now();
 
             for (List<Plan> planList: plans){
-
                 for( Plan plan: planList){
                     if(current.isBefore(plan.getStartDate())){
                         before.add(makePlan(plan));
                     }
-                    else if(current.isAfter(plan.getStartDate()) && current.isBefore(plan.getEndDate()) && plan.getFinishDate() == null){
+                    else if((current.isAfter(plan.getStartDate()) || current.isEqual(plan.getStartDate())) &&
+                            (current.isBefore(plan.getEndDate()) || current.isEqual((plan.getEndDate()))) &&
+                            plan.getFinishDate() == null
+                    ){
                         ongoing.add(makePlan(plan));
                     }
-                    else if(current.isEqual(plan.getFinishDate()) || current.isAfter(plan.getFinishDate())){
+                    else if(plan.getFinishDate() != null && (current.isEqual(plan.getFinishDate()) || current.isAfter(plan.getFinishDate()))){
                         after.add(makePlan(plan));
                     }
                 }

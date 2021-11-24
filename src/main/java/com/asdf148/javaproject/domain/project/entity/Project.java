@@ -39,7 +39,6 @@ public class Project {
     @NotBlank
     private String logoImage;
 
-    @DBRef(lazy = true)
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
     private List<ProjectUser> projectUsers = new ArrayList<>();

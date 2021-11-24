@@ -48,7 +48,7 @@ public class ProjectService {
 
         try {
             //프롲젝트 기본 채팅방 생성
-            chatRoomService.initialChatRoom(token, savedProject);
+            savedProject = chatRoomService.initialChatRoom(token, savedProject);
         }catch (Exception e){
             System.out.println("initialCheatRoom Fail: " + e.getMessage());
             return e.getMessage();

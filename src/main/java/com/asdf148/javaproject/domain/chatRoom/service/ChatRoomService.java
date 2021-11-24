@@ -1,5 +1,6 @@
 package com.asdf148.javaproject.domain.chatRoom.service;
 
+import com.asdf148.javaproject.domain.auth.entity.User;
 import com.asdf148.javaproject.domain.auth.entity.UserRepository;
 import com.asdf148.javaproject.domain.chatRoom.entity.ChatRoom;
 import com.asdf148.javaproject.domain.chatRoom.entity.ChatRoomRepository;
@@ -38,7 +39,7 @@ public class ChatRoomService {
                 .collect(Collectors.toList()));
     }
 
-    public void initialChatRoom(String token, Project project) {
+    public Project initialChatRoom(String token, Project project) {
         TokenContent tokenContext = jwtUtil.decodeToken(token);
 
         ChatRoom chatRoom = ChatRoom.builder()
@@ -46,13 +47,16 @@ public class ChatRoomService {
                 .userIds(new ArrayList<>())
                 .build();
 
-        System.out.println(userRepository.findByEmail(tokenContext.getEmail()).orElseThrow());
+        User user = userRepository.findByEmail(tokenContext.getEmail()).orElseThrow();
 
-        chatRoom.getUserIds().add(userRepository.findByEmail(tokenContext.getEmail()).orElseThrow());
+        System.out.println(user);
+
+        chatRoom.getUserIds().add(user);
+
+        chatRoom = chatRoomRepository.save(chatRoom);
 
         project.getChatRooms().add(chatRoom);
 
-        chatRoomRepository.save(chatRoom);
-        projectRepository.save(project);
+        return projectRepository.save(project);
     }
 }

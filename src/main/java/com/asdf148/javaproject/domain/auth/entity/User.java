@@ -37,7 +37,6 @@ public class User {
     @NotBlank
     private String phoneNumber;
 
-    @DBRef(lazy = true)
     private List<Project> projects;
 
     public void setPassword(String password) {
