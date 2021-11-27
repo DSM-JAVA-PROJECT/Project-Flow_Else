@@ -5,6 +5,7 @@ import com.asdf148.javaproject.domain.auth.entity.UserRepository;
 import com.asdf148.javaproject.domain.chatRoom.entity.ChatRoom;
 import com.asdf148.javaproject.domain.main.dto.MainPagePlan;
 import com.asdf148.javaproject.domain.main.dto.MainPageProject;
+import com.asdf148.javaproject.domain.main.dto.MainPageProjects;
 import com.asdf148.javaproject.domain.main.dto.MainPageUser;
 import com.asdf148.javaproject.domain.plan.entity.Plan;
 import com.asdf148.javaproject.domain.project.entity.Project;
@@ -26,7 +27,7 @@ public class MainService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-    public List<MainPageProject> mainPage(String token) {
+    public MainPageProjects mainPage(String token) {
 
         TokenContent tokenContext = jwtUtil.decodeToken(token);
 
@@ -110,7 +111,8 @@ public class MainService {
 
             mainPageProjects.add(mainPageProject);
         }
-        return mainPageProjects;
+        return MainPageProjects.builder()
+                .projects(mainPageProjects).build();
     }
 
     public MainPagePlan makePlan(Plan plan) {
