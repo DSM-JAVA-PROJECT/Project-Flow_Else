@@ -92,14 +92,21 @@ public class AuthService {
 
         User user = userRepository.findById(tokenContext.getId()).orElseThrow();
 
+        System.out.println(user.getProjects().size());
+
+        for(Project project: user.getProjects()){
+            System.out.println(project.getId());
+            System.out.println(project.getIsFinished());
+        }
+
         MyPageUser myPageUser = MyPageUser.builder()
                 .name(user.getName())
                 .profileImage(user.getProfileImage())
-                .projects(user.getProjects().stream().filter( project -> project.getEndDate().compareTo(LocalDate.now()) < 0 ).collect(Collectors.toList()).stream().map(
+                .projects(user.getProjects().stream().filter( project -> project.getIsFinished() ).collect(Collectors.toList()).stream().map(
                         project -> MyPageProjects.builder()
                                 .projectName(project.getProjectName())
                                 .logoImage(project.getLogoImage())
-                                .isFinished(project.isFinished())
+                                .isFinished(project.getIsFinished())
                                 .startDate(project.getStartDate())
                                 .endDate(project.getEndDate())
                                 .build()

@@ -63,7 +63,11 @@ public class Project {
         this.pm = pm;
     }
 
-    public void setFinished (){
+    public boolean getIsFinished(){
+        return isFinished;
+    }
+
+    public void setIsFinished (){
         isFinished = true;
     }
 }

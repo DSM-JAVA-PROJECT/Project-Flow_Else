@@ -37,6 +37,7 @@ public class User {
     @NotBlank
     private String phoneNumber;
 
+    @DBRef
     private List<Project> projects;
 
     public void setPassword(String password) {

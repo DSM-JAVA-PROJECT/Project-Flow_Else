@@ -156,7 +156,7 @@ public class ProjectService {
             throw new Exception("권한이 없습니다.");
         }
 
-        project.setFinished();
+        project.setIsFinished();
 
         projectRepository.save(project);
 
