@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -168,7 +169,23 @@ public class AuthService {
                 .projects(user.getProjects())
                 .build();
 
-        updateUser.getProjects().add(project);
+        System.out.println(updateUser.getProjects());
+
+        try{
+            updateUser.getProjects().add(project);
+        }catch (NullPointerException e){
+            updateUser = User.builder()
+                    .id(user.getId())
+                    .name(user.getName())
+                    .email(user.getEmail())
+                    .password(user.getPassword())
+                    .phoneNumber(user.getPhoneNumber())
+                    .profileImage(user.getProfileImage())
+                    .projects(new ArrayList<Project>())
+                    .build();
+
+            updateUser.getProjects().add(project);
+        }
 
         userRepository.save(updateUser);
     }

@@ -14,6 +14,7 @@ import com.asdf148.javaproject.global.dto.TokenContent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.awt.desktop.ScreenSleepEvent;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -51,65 +52,69 @@ public class MainService {
         }
 
         for (Project project : projects) {
-            MainPageProject mainPageProject = MainPageProject.builder().build();
+            System.out.println(project.getId());
+            System.out.println(project.getIsFinished());
+            if(project.getIsFinished() == false){
+                MainPageProject mainPageProject = MainPageProject.builder().build();
 
-            List<MainPagePlan> before = new ArrayList<>();
-            List<MainPagePlan> ongoing = new ArrayList<>();
-            List<MainPagePlan> after = new ArrayList<>();
+                List<MainPagePlan> before = new ArrayList<>();
+                List<MainPagePlan> ongoing = new ArrayList<>();
+                List<MainPagePlan> after = new ArrayList<>();
 
-            LocalDate current = LocalDate.now();
+                LocalDate current = LocalDate.now();
 
-            for (Plan plan : plans) {
-                if (current.isBefore(plan.getStartDate())) {
-                    before.add(makePlan(plan));
-                } else if ((current.isAfter(plan.getStartDate()) || current.isEqual(plan.getStartDate())) &&
-                        (current.isBefore(plan.getEndDate()) || current.isEqual((plan.getEndDate()))) &&
-                        plan.getFinishDate() == null
-                ) {
-                    ongoing.add(makePlan(plan));
-                } else if (plan.getFinishDate() != null && (current.isEqual(plan.getFinishDate()) || current.isAfter(plan.getFinishDate()))) {
-                    after.add(makePlan(plan));
+                for (Plan plan : plans) {
+                    if (current.isBefore(plan.getStartDate())) {
+                        before.add(makePlan(plan));
+                    } else if ((current.isAfter(plan.getStartDate()) || current.isEqual(plan.getStartDate())) &&
+                            (current.isBefore(plan.getEndDate()) || current.isEqual((plan.getEndDate()))) &&
+                            plan.getFinishDate() == null
+                    ) {
+                        ongoing.add(makePlan(plan));
+                    } else if (plan.getFinishDate() != null && (current.isEqual(plan.getFinishDate()) || current.isAfter(plan.getFinishDate()))) {
+                        after.add(makePlan(plan));
+                    }
                 }
+
+
+                int personalFinish = (int) plans.stream().filter(plan -> plan.getPlanUsers().stream().anyMatch(planUser -> planUser.getUser().equals(user)) && plan.getFinishDate() != null).count();
+                int personalEntire = (int) plans.stream().filter(plan -> plan.getPlanUsers().stream().anyMatch(planUser -> planUser.getUser().equals(user))).count();
+
+                int planFinish = (int) plans.stream().filter(plan -> plan.getFinishDate() != null).count();
+                int planEntire = plans.size();
+
+                int personalProgress = 0;
+                int projectProgress = 0;
+
+                long remaingDays = ChronoUnit.DAYS.between(project.getStartDate(), project.getEndDate());
+
+                try {
+                    personalProgress = personalFinish / personalEntire;
+                } catch (ArithmeticException e) {
+                    personalProgress = 0;
+                }
+
+                try {
+                    projectProgress = planFinish / planEntire;
+                } catch (ArithmeticException e) {
+                    projectProgress = 0;
+                }
+                mainPageProject = MainPageProject.builder()
+                        .id(project.getId().toString())
+                        .name(project.getProjectName())
+                        .logoImage(project.getLogoImage())
+                        .startDate(project.getStartDate())
+                        .endDate(project.getEndDate())
+                        .personalProgress("" + personalProgress + "%")
+                        .projectProgress("" + projectProgress + "%")
+                        .remainingDays("D-" + remaingDays)
+                        .before(before)
+                        .ongoing(ongoing)
+                        .after(after)
+                        .build();
+
+                mainPageProjects.add(mainPageProject);
             }
-
-
-            int personalFinish = (int) plans.stream().filter(plan -> plan.getPlanUsers().stream().anyMatch(planUser -> planUser.getUser().equals(user)) && plan.getFinishDate() != null).count();
-            int personalEntire = (int) plans.stream().filter(plan -> plan.getPlanUsers().stream().anyMatch(planUser -> planUser.getUser().equals(user))).count();
-
-            int planFinish = (int) plans.stream().filter(plan -> plan.getFinishDate() != null).count();
-            int planEntire = plans.size();
-
-            int personalProgress = 0;
-            int projectProgress = 0;
-
-            long remaingDays = ChronoUnit.DAYS.between(project.getStartDate(), project.getEndDate());
-
-            try {
-                personalProgress = personalFinish / personalEntire;
-            } catch (ArithmeticException e) {
-                personalProgress = 0;
-            }
-
-            try {
-                projectProgress = planFinish / planEntire;
-            } catch (ArithmeticException e) {
-                projectProgress = 0;
-            }
-            mainPageProject = MainPageProject.builder()
-                    .id(project.getId().toString())
-                    .name(project.getProjectName())
-                    .logoImage(project.getLogoImage())
-                    .startDate(project.getStartDate())
-                    .endDate(project.getEndDate())
-                    .personalProgress("" + personalProgress + "%")
-                    .projectProgress("" + projectProgress + "%")
-                    .remainingDays("D-" + remaingDays)
-                    .before(before)
-                    .ongoing(ongoing)
-                    .after(after)
-                    .build();
-
-            mainPageProjects.add(mainPageProject);
         }
         return MainPageProjects.builder()
                 .projects(mainPageProjects).build();
