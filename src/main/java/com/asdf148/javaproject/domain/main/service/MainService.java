@@ -6,7 +6,6 @@ import com.asdf148.javaproject.domain.chatRoom.entity.ChatRoom;
 import com.asdf148.javaproject.domain.main.dto.MainPagePlan;
 import com.asdf148.javaproject.domain.main.dto.MainPageProject;
 import com.asdf148.javaproject.domain.main.dto.MainPageProjects;
-import com.asdf148.javaproject.domain.main.dto.MainPageUser;
 import com.asdf148.javaproject.domain.plan.entity.Plan;
 import com.asdf148.javaproject.domain.project.entity.Project;
 import com.asdf148.javaproject.global.config.JwtUtil;
@@ -14,12 +13,10 @@ import com.asdf148.javaproject.global.dto.TokenContent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.awt.desktop.ScreenSleepEvent;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -57,12 +54,17 @@ public class MainService {
             if(project.getIsFinished() == false){
                 MainPageProject mainPageProject = MainPageProject.builder().build();
 
+                //진행 전
                 List<MainPagePlan> before = new ArrayList<>();
+                //진행 중
                 List<MainPagePlan> ongoing = new ArrayList<>();
+                //마감 됨
                 List<MainPagePlan> after = new ArrayList<>();
 
+                // 현재 날짜
                 LocalDate current = LocalDate.now();
 
+                // 일정 분류
                 for (Plan plan : plans) {
                     if (current.isBefore(plan.getStartDate())) {
                         before.add(makePlan(plan));
@@ -77,9 +79,11 @@ public class MainService {
                 }
 
 
+                //개인별 마감된 일정, 전체 일정 수
                 int personalFinish = (int) plans.stream().filter(plan -> plan.getPlanUsers().stream().anyMatch(planUser -> planUser.getUser().equals(user)) && plan.getFinishDate() != null).count();
                 int personalEntire = (int) plans.stream().filter(plan -> plan.getPlanUsers().stream().anyMatch(planUser -> planUser.getUser().equals(user))).count();
 
+                //전체 마감된 일정, 전체 일정 수
                 int planFinish = (int) plans.stream().filter(plan -> plan.getFinishDate() != null).count();
                 int planEntire = plans.size();
 
@@ -125,11 +129,6 @@ public class MainService {
                 .name(plan.getName())
                 .startDate(plan.getStartDate())
                 .endDate(plan.getEndDate())
-                .mainPageUsers(plan.getPlanUsers().stream().map(
-                        planUser -> MainPageUser.builder()
-                                .image(planUser.getUser().getProfileImage())
-                                .build()
-                ).collect(Collectors.toList()))
                 .build();
     }
 }
