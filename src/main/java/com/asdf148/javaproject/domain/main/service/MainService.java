@@ -49,8 +49,6 @@ public class MainService {
         }
 
         for (Project project : projects) {
-            System.out.println(project.getId());
-            System.out.println(project.getIsFinished());
             if(project.getIsFinished() == false){
                 MainPageProject mainPageProject = MainPageProject.builder().build();
 
