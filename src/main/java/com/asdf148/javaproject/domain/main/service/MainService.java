@@ -124,6 +124,7 @@ public class MainService {
 
     public MainPagePlan makePlan(Plan plan) {
         return MainPagePlan.builder()
+                .planId(plan.getId().toString())
                 .name(plan.getName())
                 .startDate(plan.getStartDate())
                 .endDate(plan.getEndDate())
