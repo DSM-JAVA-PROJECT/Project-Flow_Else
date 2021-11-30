@@ -21,9 +21,9 @@ public class MainPageProject {
 
     private LocalDate endDate;
 
-    private String personalProgress;
+    private Integer personalProgress;
 
-    private String projectProgress;
+    private Integer projectProgress;
 
     private String remainingDays;
 
