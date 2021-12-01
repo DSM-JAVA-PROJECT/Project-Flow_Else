@@ -88,7 +88,7 @@ public class MainService {
                 int personalProgress = 0;
                 int projectProgress = 0;
 
-                long remaingDays = ChronoUnit.DAYS.between(project.getStartDate(), project.getEndDate());
+                long remaingDays = ChronoUnit.DAYS.between(LocalDate.now(), project.getEndDate());
 
                 try {
                     personalProgress = personalFinish / personalEntire;
