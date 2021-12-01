@@ -49,8 +49,6 @@ public class ChatRoomService {
 
         User user = userRepository.findByEmail(tokenContext.getEmail()).orElseThrow();
 
-        System.out.println(user);
-
         chatRoom.getUserIds().add(user);
 
         chatRoom = chatRoomRepository.save(chatRoom);

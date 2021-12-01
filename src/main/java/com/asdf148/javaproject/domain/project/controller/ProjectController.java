@@ -67,7 +67,6 @@ public class ProjectController {
         String imgUrl = "";
 
         try{
-            System.out.println(modifyProject.getProjectName());
             imgUrl = s3Upload.upload(modifyProject.getFile(), "project");
         } catch (Exception e){
             System.out.println("ProjectController modifyProject S3 Upload: " + e.getMessage());

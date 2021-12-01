@@ -75,8 +75,6 @@ public class PlanService {
             }
         }
 
-        System.out.println("point 3");
-
         return MonthPlans.builder()
                 .monthPlans(monthPlanList)
                 .build();
@@ -88,15 +86,20 @@ public class PlanService {
         List<Plan> plans = new ArrayList<>();
 
         for(ChatRoom chatRoom :project.getChatRooms()){
-            plans.addAll(chatRoom.getPlans());
+            if(chatRoom.getPlans() != null){
+                for(Plan plan: chatRoom.getPlans()){
+                    plans.add(plan);
+                }
+            }
         }
+
         List<PlanDetail> planDetails = new ArrayList<PlanDetail>();
 
         LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
 
         for (Plan plan: plans){
 
-            if(plan.getStartDate().compareTo(localDate) >= 0 && plan.getEndDate().compareTo(localDate) <= 0){
+            if(plan.getStartDate().compareTo(localDate) <= 0 && plan.getEndDate().compareTo(localDate) >= 0){
 
                 planDetails.add(PlanDetail.builder()
                         .name(plan.getName())

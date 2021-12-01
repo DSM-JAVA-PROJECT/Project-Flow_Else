@@ -93,13 +93,6 @@ public class AuthService {
 
         User user = userRepository.findById(tokenContext.getId()).orElseThrow();
 
-        System.out.println(user.getProjects().size());
-
-        for(Project project: user.getProjects()){
-            System.out.println(project.getId());
-            System.out.println(project.getIsFinished());
-        }
-
         MyPageUser myPageUser = MyPageUser.builder()
                 .name(user.getName())
                 .profileImage(user.getProfileImage())
@@ -168,8 +161,6 @@ public class AuthService {
                 .profileImage(user.getProfileImage())
                 .projects(user.getProjects())
                 .build();
-
-        System.out.println(updateUser.getProjects());
 
         try{
             updateUser.getProjects().add(project);
