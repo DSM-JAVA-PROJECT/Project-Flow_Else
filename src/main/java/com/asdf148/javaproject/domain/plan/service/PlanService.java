@@ -50,7 +50,9 @@ public class PlanService {
         List<Plan> plans = new ArrayList<>();
 
         for(ChatRoom chatRoom :project.getChatRooms()){
-            plans.addAll(chatRoom.getPlans());
+            if(chatRoom.getPlans() != null){
+                plans.addAll(chatRoom.getPlans());
+            }
         }
 
         List<MonthPlan> monthPlanList = new ArrayList<MonthPlan>();
@@ -72,6 +74,8 @@ public class PlanService {
                 monthPlanList.add(monthPlan);
             }
         }
+
+        System.out.println("point 3");
 
         return MonthPlans.builder()
                 .monthPlans(monthPlanList)
