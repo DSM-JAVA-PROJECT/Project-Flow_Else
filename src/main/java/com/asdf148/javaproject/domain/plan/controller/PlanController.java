@@ -16,10 +16,10 @@ import java.util.Map;
 public class PlanController {
     private final PlanService planService;
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<String> completePlan(@RequestHeader Map<String, String> header, @PathVariable("id") ObjectId projectId){
+    @PatchMapping("/close")
+    public ResponseEntity<String> completePlan(@RequestHeader Map<String, String> header, @RequestParam("project") ObjectId projectId, @RequestParam("plan") ObjectId planId){
         try{
-            return new ResponseEntity<>(planService.completePlan(header.get("authorization").substring(7), projectId), HttpStatus.OK);
+            return new ResponseEntity<>(planService.completePlan(header.get("authorization").substring(7), projectId, planId), HttpStatus.OK);
         }catch (Exception e){
             System.out.println("PlanController completePlan: " + e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
