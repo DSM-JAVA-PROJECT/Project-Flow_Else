@@ -3,6 +3,7 @@ package com.asdf148.javaproject.domain.auth.service;
 import com.asdf148.javaproject.domain.auth.entity.OAuthAttributes;
 import com.asdf148.javaproject.domain.auth.entity.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -23,6 +24,9 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     private final UserRepository userRepository;
     private final HttpSession httpSession;
 
+    @Value("${oauth2.authorizedRedirectUris}")
+    private String redirectUrl;
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService delegate = new DefaultOAuth2UserService();
@@ -37,25 +41,16 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         Iterator<String> names = httpSession.getAttributeNames().asIterator();
 
-        while (names.hasNext()){
-            System.out.println("enum: " + names.next());
-        }
-
         if(httpSession.getAttribute("OAuthToken") != null){
             httpSession.removeAttribute("OAuthToken " + oAuth2User.getName());
         }
 
         httpSession.setAttribute("OAuthToken", userRequest.getAccessToken().getTokenValue());
-        System.out.println("setAttribute: " + httpSession.getAttribute("OAuthToken"));
 
-        DefaultOAuth2User test = new DefaultOAuth2User(
+        return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("USER")),
                 attributes.getAttributes(),
                 attributes.getNameAttributeKey());
-
-        System.out.println("Test!!");
-
-        return test;
     }
 
 }

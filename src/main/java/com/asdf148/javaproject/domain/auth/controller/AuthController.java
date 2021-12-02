@@ -1,5 +1,6 @@
 package com.asdf148.javaproject.domain.auth.controller;
 
+import com.asdf148.javaproject.domain.auth.dto.GithubToken;
 import com.asdf148.javaproject.domain.auth.dto.SignInUser;
 import com.asdf148.javaproject.domain.auth.dto.SignUpUser;
 import com.asdf148.javaproject.domain.auth.service.AuthService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Map;
@@ -21,10 +23,11 @@ import java.util.Map;
 public class AuthController {
     private final S3Upload s3Upload;
     private final AuthService authService;
+    private final HttpSession httpSession;
 
     @GetMapping("/oauth")
-    public void githubLogin(HttpServletResponse response) throws IOException {
-        response.sendRedirect("http://18.210.203.222:8080/main");
+    public ResponseEntity<Object> githubLogin(HttpServletResponse response) throws IOException {
+        return new ResponseEntity<Object>(new GithubToken(httpSession.getAttribute("OAuthToken").toString()), HttpStatus.OK);
     }
 
     @PostMapping("/join")
