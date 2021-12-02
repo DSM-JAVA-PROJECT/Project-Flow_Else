@@ -24,7 +24,7 @@ public class AuthController {
 
     @GetMapping("/oauth")
     public void githubLogin(HttpServletResponse response) throws IOException {
-//        return new ResponseEntity<>();
+        response.sendRedirect("http://18.210.203.222:8080/main");
     }
 
     @PostMapping("/join")
