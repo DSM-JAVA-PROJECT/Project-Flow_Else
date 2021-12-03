@@ -108,6 +108,7 @@ public class PlanService {
             if(plan.getStartDate().compareTo(localDate) <= 0 && plan.getEndDate().compareTo(localDate) >= 0){
 
                 planDetails.add(PlanDetail.builder()
+                        .id(plan.getId().toString())
                         .name(plan.getName())
                         .isFinish(plan.getFinishDate() != null)
                         .build());
