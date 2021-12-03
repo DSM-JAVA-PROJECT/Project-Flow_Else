@@ -34,22 +34,35 @@ public class MainService {
         User user = userRepository.findByEmail(tokenContext.getEmail()).orElseThrow();
 
         List<Project> projects = user.getProjects();
-        List<Plan> plans = new ArrayList<>();
+        List<List<Plan>> plansList= new ArrayList<List<Plan>>();
 
         List<MainPageProject> mainPageProjects = new ArrayList<MainPageProject>();
 
         for (Project project : projects) {
-            for (ChatRoom chatRoom : project.getChatRooms()) {
-                if(chatRoom.getPlans() != null) {
-                    for (Plan plan : chatRoom.getPlans()) {
-                        plans.add(plan);
+            if(project.getIsFinished() == false){
+                List<Plan> plans = new ArrayList<>();
+                for (ChatRoom chatRoom : project.getChatRooms()) {
+                    if(chatRoom.getPlans() != null) {
+                        for (Plan plan : chatRoom.getPlans()) {
+                            plans.add(plan);
+                        }
                     }
                 }
+                plansList.add(plans);
             }
         }
 
-        for (Project project : projects) {
-            if(project.getIsFinished() == false){
+        List<Project> presentProjects = new ArrayList<>();
+
+        for(int i = 0; i < projects.size(); i++ ){
+            if(projects.get(i).getIsFinished() == false) {
+                presentProjects.add(projects.get(i));
+            }
+        }
+
+        for(int i = 0; i < presentProjects.size(); i++ ){
+            if(presentProjects.get(i).getIsFinished() == false){
+
                 MainPageProject mainPageProject = MainPageProject.builder().build();
 
                 //진행 전
@@ -62,8 +75,10 @@ public class MainService {
                 // 현재 날짜
                 LocalDate current = LocalDate.now();
 
-                // 일정 분류
-                for (Plan plan : plans) {
+                float personalProgress = 0;
+                float projectProgress = 0;
+
+                for(Plan plan: plansList.get(i)){
                     if (current.isBefore(plan.getStartDate())) {
                         before.add(makePlan(plan));
                     } else if ((current.isAfter(plan.getStartDate()) || current.isEqual(plan.getStartDate())) &&
@@ -76,37 +91,30 @@ public class MainService {
                     }
                 }
 
-
                 //개인별 마감된 일정, 전체 일정 수
-                int personalFinish = (int) plans.stream().filter(plan -> plan.getPlanUsers().stream().anyMatch(planUser -> planUser.getUser().equals(user)) && plan.getFinishDate() != null).count();
-                int personalEntire = (int) plans.stream().filter(plan -> plan.getPlanUsers().stream().anyMatch(planUser -> planUser.getUser().equals(user))).count();
+                float personalFinish = (float) plansList.get(i).stream().filter(plan -> plan.getPlanUsers().stream().anyMatch(planUser -> planUser.getUser().equals(user)) && plan.getFinishDate() != null).count();
+                float personalEntire = (float) plansList.get(i).stream().filter(plan -> plan.getPlanUsers().stream().anyMatch(planUser -> planUser.getUser().equals(user))).count();
 
                 //전체 마감된 일정, 전체 일정 수
-                int planFinish = (int) plans.stream().filter(plan -> plan.getFinishDate() != null).count();
-                int planEntire = plans.size();
+                float planFinish = (int) plansList.get(i).stream().filter(plan -> plan.getFinishDate() != null).count();
+                float planEntire = plansList.get(i).size();
 
-                int personalProgress = 0;
-                int projectProgress = 0;
+                long remaingDays = ChronoUnit.DAYS.between(LocalDate.now(), presentProjects.get(i).getEndDate());
 
-                long remaingDays = ChronoUnit.DAYS.between(LocalDate.now(), project.getEndDate());
-
-                try {
-                    personalProgress = personalFinish / personalEntire;
-                } catch (ArithmeticException e) {
-                    personalProgress = 0;
+                if (personalEntire != 0f) {
+                    personalProgress = ((personalFinish / personalEntire) * 100);
                 }
 
-                try {
-                    projectProgress = planFinish / planEntire;
-                } catch (ArithmeticException e) {
-                    projectProgress = 0;
+                if (planEntire != 0f) {
+                    projectProgress = ((planFinish / planEntire) * 100);
                 }
+
                 mainPageProject = MainPageProject.builder()
-                        .id(project.getId().toString())
-                        .name(project.getProjectName())
-                        .logoImage(project.getLogoImage())
-                        .startDate(project.getStartDate())
-                        .endDate(project.getEndDate())
+                        .id(presentProjects.get(i).getId().toString())
+                        .name(presentProjects.get(i).getProjectName())
+                        .logoImage(presentProjects.get(i).getLogoImage())
+                        .startDate(presentProjects.get(i).getStartDate())
+                        .endDate(presentProjects.get(i).getEndDate())
                         .personalProgress(personalProgress)
                         .projectProgress(projectProgress)
                         .remainingDays("D-" + remaingDays)

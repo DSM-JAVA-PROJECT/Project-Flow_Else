@@ -107,8 +107,6 @@ public class AuthService {
                 ).collect(Collectors.toList()))
                 .build();
 
-        System.out.println("myPage: " + user.getName());
-
         return myPageUser;
     }
 

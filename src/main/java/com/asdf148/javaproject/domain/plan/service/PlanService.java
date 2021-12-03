@@ -29,31 +29,25 @@ public class PlanService {
     private final ProjectRepository projectRepository;
     private final ChatRoomRepository chatRoomRepository;
 
-    public String completePlan(String token, ObjectId projectId, ObjectId planId){
-        try{
-            TokenContent tokenContext = jwtUtil.decodeToken(token);
-            Project project = projectRepository.findById(projectId).orElseThrow();
-            Boolean isTrue = false;
-            for(ChatRoom chatRoom: project.getChatRooms()){
-                for(Plan findPlan: chatRoom.getPlans()){
-                    if(findPlan.getId().equals(planId)){
-                        System.out.println(findPlan.getFinishDate());
-                        findPlan.setFinishDate(LocalDate.now());
-                        isTrue = true;
-                        chatRoomRepository.save(chatRoom);
-                        break;
-                    }
-                }
-                if(isTrue == true){
+    public String completePlan(String token, ObjectId projectId, ObjectId planId) throws Exception {
+        TokenContent tokenContext = jwtUtil.decodeToken(token);
+        Project project = projectRepository.findById(projectId).orElseThrow();
+        Boolean isTrue = false;
+        for(ChatRoom chatRoom: project.getChatRooms()){
+            for(Plan findPlan: chatRoom.getPlans()){
+                if(findPlan.getId().equals(planId)){
+                    System.out.println(findPlan.getFinishDate());
+                    findPlan.setFinishDate(LocalDate.now());
+                    isTrue = true;
+                    chatRoomRepository.save(chatRoom);
                     break;
                 }
             }
-
-            return "Completed";
-        }catch (Exception e){
-            System.out.println("PlanService completeSchedule: " + e.getMessage());
-            return e.getMessage();
+            if(isTrue == true){
+                break;
+            }
         }
+        return "Completed";
     }
 
     public MonthPlans monthPlans(ObjectId projectId, int year, int month){
