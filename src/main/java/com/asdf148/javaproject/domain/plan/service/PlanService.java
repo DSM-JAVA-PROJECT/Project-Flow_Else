@@ -34,12 +34,14 @@ public class PlanService {
         Project project = projectRepository.findById(projectId).orElseThrow();
         Boolean isTrue = false;
         for(ChatRoom chatRoom: project.getChatRooms()){
-            for(Plan findPlan: chatRoom.getPlans()){
-                if(findPlan.getId().equals(planId)){
-                    findPlan.setFinishDate(LocalDate.now());
-                    isTrue = true;
-                    chatRoomRepository.save(chatRoom);
-                    break;
+            if(chatRoom.getPlans() != null){
+                for(Plan findPlan: chatRoom.getPlans()){
+                    if(findPlan.getId().equals(planId)){
+                        findPlan.setFinishDate(LocalDate.now());
+                        isTrue = true;
+                        chatRoomRepository.save(chatRoom);
+                        break;
+                    }
                 }
             }
             if(isTrue == true){

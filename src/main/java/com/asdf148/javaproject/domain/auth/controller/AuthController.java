@@ -1,6 +1,7 @@
 package com.asdf148.javaproject.domain.auth.controller;
 
 import com.asdf148.javaproject.domain.auth.dto.GithubToken;
+import com.asdf148.javaproject.domain.auth.dto.ProfileImage;
 import com.asdf148.javaproject.domain.auth.dto.SignInUser;
 import com.asdf148.javaproject.domain.auth.dto.SignUpUser;
 import com.asdf148.javaproject.domain.auth.service.AuthService;
@@ -93,10 +94,10 @@ public class AuthController {
     }
 
     @PatchMapping("/image")
-    public ResponseEntity<String> ChangeImage(@RequestHeader Map<String, String> header,@RequestBody String image){
+    public ResponseEntity<String> ChangeImage(@RequestHeader Map<String, String> header,@RequestBody ProfileImage profileImage){
 
         try{
-            return new ResponseEntity<>(authService.changeImage(header.get("authorization").substring(7), image), HttpStatus.OK);
+            return new ResponseEntity<>(authService.changeImage(header.get("authorization").substring(7), profileImage.getImage()), HttpStatus.OK);
         }catch (Exception e){
             System.out.println("AuthController modify: " + e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
