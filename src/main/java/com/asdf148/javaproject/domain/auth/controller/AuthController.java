@@ -4,8 +4,11 @@ import com.asdf148.javaproject.domain.auth.dto.GithubToken;
 import com.asdf148.javaproject.domain.auth.dto.SignInUser;
 import com.asdf148.javaproject.domain.auth.dto.SignUpUser;
 import com.asdf148.javaproject.domain.auth.service.AuthService;
+import com.asdf148.javaproject.domain.project.dto.Image;
 import com.asdf148.javaproject.global.S3Upload;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +27,7 @@ public class AuthController {
     private final S3Upload s3Upload;
     private final AuthService authService;
     private final HttpSession httpSession;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping("/oauth")
     public ResponseEntity<Object> githubLogin(HttpServletResponse response) throws IOException {
@@ -74,21 +78,25 @@ public class AuthController {
         }
     }
 
-    @PatchMapping("/image")
-    public ResponseEntity<String> ChangeImage(@RequestHeader Map<String, String> header, MultipartFile file){
+    @PostMapping("/image")
+    public ResponseEntity<Object> uploadImage(@RequestPart MultipartFile file){
         String imgUrl = "";
 
         try{
             imgUrl = s3Upload.upload(file, "profile");
         } catch (Exception e){
-            System.out.println("AuthController modify S3 Upload: " + e.getMessage());
+            logger.error("S3 Upload: " + e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
-        System.out.println("controller: " + imgUrl);
+        return new ResponseEntity<>(Image.builder().image(imgUrl).build(), HttpStatus.OK);
+    }
+
+    @PatchMapping("/image")
+    public ResponseEntity<String> ChangeImage(@RequestHeader Map<String, String> header, String image){
 
         try{
-            return new ResponseEntity<>(authService.changeImage(header.get("authorization").substring(7), imgUrl), HttpStatus.OK);
+            return new ResponseEntity<>(authService.changeImage(header.get("authorization").substring(7), image), HttpStatus.OK);
         }catch (Exception e){
             System.out.println("AuthController modify: " + e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

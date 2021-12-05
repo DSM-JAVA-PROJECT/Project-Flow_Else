@@ -24,8 +24,6 @@ public class ProjectController {
     private final S3Upload s3Upload;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
-
     @PostMapping
     public ResponseEntity<String> createProject(@RequestHeader Map<String, String> header, HttpServletRequest request, @ModelAttribute("createProject") CreateProject createProject){
         Set<String> keySet = request.getParameterMap().keySet();
@@ -57,13 +55,11 @@ public class ProjectController {
         }
     }
 
-    @PostMapping("/Image")
+    @PostMapping("/image")
     public ResponseEntity<Object> uploadImage(@RequestPart MultipartFile file){
         String imgUrl = "";
 
         try{
-            System.out.println(file.getOriginalFilename());
-            System.out.println(file.getContentType());
             imgUrl = s3Upload.upload(file, "project");
         } catch (Exception e){
             logger.error("S3 Upload: " + e.getMessage());
