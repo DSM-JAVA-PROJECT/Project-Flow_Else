@@ -1,5 +1,6 @@
 package com.asdf148.javaproject.domain.project.service;
 
+import com.asdf148.javaproject.domain.auth.entity.User;
 import com.asdf148.javaproject.domain.auth.entity.UserRepository;
 import com.asdf148.javaproject.domain.auth.service.AuthService;
 import com.asdf148.javaproject.domain.chatRoom.service.ChatRoomService;
@@ -182,13 +183,19 @@ public class ProjectService {
 
         Project project = projectRepository.findById(projectId).orElseThrow();
 
+        User user = userRepository.findByEmail(email).orElseThrow();
+
         ProjectUser projectUser = ProjectUser.builder()
-                .user(userRepository.findByEmail(email).orElseThrow())
+                .user(user)
                 .build();
 
         project.getProjectUsers().add(projectUser);
 
-        projectRepository.save(project);
+        project = projectRepository.save(project);
+
+        user.getProjects().add(project);
+
+        userRepository.save(user);
     }
 
     public String modifyProject(String token, ObjectId id, String imgUrl, ModifyProject modifyProject) throws Exception{
