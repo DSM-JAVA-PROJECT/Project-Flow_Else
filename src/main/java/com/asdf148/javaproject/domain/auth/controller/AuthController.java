@@ -93,7 +93,7 @@ public class AuthController {
     }
 
     @PatchMapping("/image")
-    public ResponseEntity<String> ChangeImage(@RequestHeader Map<String, String> header, String image){
+    public ResponseEntity<String> ChangeImage(@RequestHeader Map<String, String> header,@RequestBody String image){
 
         try{
             return new ResponseEntity<>(authService.changeImage(header.get("authorization").substring(7), image), HttpStatus.OK);
