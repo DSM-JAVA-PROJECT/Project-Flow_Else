@@ -29,8 +29,6 @@ public class MainService {
 
         TokenContent tokenContext = jwtUtil.decodeToken(token);
 
-        System.out.println(tokenContext.getId());
-
         User user = userRepository.findByEmail(tokenContext.getEmail()).orElseThrow();
 
         List<Project> projects = user.getProjects();

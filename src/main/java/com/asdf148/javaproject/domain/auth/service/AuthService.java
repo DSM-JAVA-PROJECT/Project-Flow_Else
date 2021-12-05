@@ -66,12 +66,7 @@ public class AuthService {
 
     public ReturnToken signIn(SignInUser s_user) throws Exception {
 
-        System.out.println("mongoDB: " + mongoDBURI);
-        System.out.println("oauth: " + oauthRedirect);
-
-        System.out.println("before findByEmail");
         User user = userRepository.findByEmail(s_user.getEmail()).orElseThrow();
-        System.out.println("after findByEmail");
         if (user == null) {
             throw new Exception("이메일이 잘못되었습니다.");
         }

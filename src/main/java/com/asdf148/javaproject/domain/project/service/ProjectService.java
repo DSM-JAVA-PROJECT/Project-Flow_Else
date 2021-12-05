@@ -6,6 +6,7 @@ import com.asdf148.javaproject.domain.chatRoom.service.ChatRoomService;
 import com.asdf148.javaproject.domain.email.service.EmailService;
 import com.asdf148.javaproject.domain.project.dto.CreateProject;
 import com.asdf148.javaproject.domain.project.dto.ModifyProject;
+import com.asdf148.javaproject.domain.project.dto.ProjectBody;
 import com.asdf148.javaproject.domain.project.entity.Project;
 import com.asdf148.javaproject.domain.project.entity.ProjectRepository;
 import com.asdf148.javaproject.domain.project.entity.ProjectUser;
@@ -71,6 +72,100 @@ public class ProjectService {
         return savedProject.getId().toString();
     }
 
+    public String temporaryCreateProject(String token,
+                                         String imgUrl,
+                                         String projectName,
+                                         String explanation,
+                                         String startDate,
+                                         String endDate,
+                                         String emails) throws Exception {
+        TokenContent tokenContext = jwtUtil.decodeToken(token);
+
+        Project project = Project.builder()
+                .projectName(projectName)
+                .explanation(explanation)
+                .startDate(LocalDate.parse(startDate, DateTimeFormatter.ISO_DATE))
+                .endDate(LocalDate.parse(endDate, DateTimeFormatter.ISO_DATE))
+                .logoImage(imgUrl)
+                .pm(userRepository.findById(tokenContext.getId()).orElseThrow())
+                .build();
+
+        Project savedProject = projectRepository.save(project);
+
+        //프로젝트 만든 사람 추가
+        savedProject = initialPersonnel(token, savedProject);
+
+        try {
+            //프롲젝트 기본 채팅방 생성
+            savedProject = chatRoomService.initialChatRoom(token, savedProject);
+        }catch (Exception e){
+            System.out.println("initialCheatRoom Fail: " + e.getMessage());
+            return e.getMessage();
+        }
+
+        //유저에 프로젝트 추가
+        authService.addProject(token, savedProject);
+
+        String[] emailList = emails.split(",");
+
+        for(String email: emailList) {
+            try{
+                //이메일 전송
+                emailService.sendInviteLink(email, savedProject.getId());
+            }
+            catch (Exception e){
+                System.out.println("sendInviteLink" + e.getMessage());
+                return e.getMessage();
+            }
+        }
+
+        return savedProject.getId().toString();
+    }
+
+    public String testCreateProject(String token, ProjectBody projectBody) throws Exception {
+        TokenContent tokenContext = jwtUtil.decodeToken(token);
+
+        Project project = Project.builder()
+                .projectName(projectBody.getProjectName())
+                .explanation(projectBody.getExplanation())
+                .startDate(LocalDate.parse(projectBody.getStartDate(), DateTimeFormatter.ISO_DATE))
+                .endDate(LocalDate.parse(projectBody.getEndDate(), DateTimeFormatter.ISO_DATE))
+                .logoImage(projectBody.getImage())
+                .pm(userRepository.findById(tokenContext.getId()).orElseThrow())
+                .build();
+
+        Project savedProject = projectRepository.save(project);
+
+        //프로젝트 만든 사람 추가
+        savedProject = initialPersonnel(token, savedProject);
+
+        try {
+            //프롲젝트 기본 채팅방 생성
+            savedProject = chatRoomService.initialChatRoom(token, savedProject);
+        }catch (Exception e){
+            System.out.println("initialCheatRoom Fail: " + e.getMessage());
+            return e.getMessage();
+        }
+
+        //유저에 프로젝트 추가
+        authService.addProject(token, savedProject);
+
+//        String[] emailList = emails.split(",");
+
+        for(String email: projectBody.getEmails()) {
+            try{
+                //이메일 전송
+                emailService.sendInviteLink(email, savedProject.getId());
+            }
+            catch (Exception e){
+                System.out.println("sendInviteLink" + e.getMessage());
+                return e.getMessage();
+            }
+        }
+
+        return savedProject.getId().toString();
+    }
+
     public Project initialPersonnel(String token, Project project) {
         TokenContent tokenContext = jwtUtil.decodeToken(token);
 
@@ -94,7 +189,6 @@ public class ProjectService {
         project.getProjectUsers().add(projectUser);
 
         projectRepository.save(project);
-
     }
 
     public String modifyProject(String token, ObjectId id, String imgUrl, ModifyProject modifyProject) throws Exception{

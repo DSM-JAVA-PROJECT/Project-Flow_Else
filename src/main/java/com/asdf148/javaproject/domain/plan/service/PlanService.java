@@ -36,7 +36,6 @@ public class PlanService {
         for(ChatRoom chatRoom: project.getChatRooms()){
             for(Plan findPlan: chatRoom.getPlans()){
                 if(findPlan.getId().equals(planId)){
-                    System.out.println(findPlan.getFinishDate());
                     findPlan.setFinishDate(LocalDate.now());
                     isTrue = true;
                     chatRoomRepository.save(chatRoom);
